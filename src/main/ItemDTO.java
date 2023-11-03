@@ -1,5 +1,5 @@
-package pack03.Item;
+package main;
 
 public class ItemDTO {
-	1
+	
 }
