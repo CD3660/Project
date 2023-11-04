@@ -1,4 +1,4 @@
-package main;
+package machine;
 
 public class ItemDTO {
 	private String productName, Type, Description;

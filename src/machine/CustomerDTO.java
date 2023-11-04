@@ -1,4 +1,4 @@
-package main;
+package machine;
 
 public class CustomerDTO {
 	private String id, pw, address, number, email, cart, purchase;
