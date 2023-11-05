@@ -1,5 +1,9 @@
 package machine;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class DAO {
@@ -9,6 +13,11 @@ public class DAO {
 	CustomerDTO cDto;
 	ItemDTO iDto;
 	OrderListDTO oDto;
+	
+	//임시
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/database";
+    private static final String DB_USER = "username";
+    private static final String DB_PASSWORD = "password";
 	
 	public DAO() {
 		sc = new Scanner(System.in);
@@ -136,4 +145,54 @@ public class DAO {
 			}
 		}
 	}
+
+	 // 상품 정보 수정
+    public void editItemPrice(int itemId, String newName, double newPrice, String newDescription) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement statement = connection.prepareStatement("UPDATE products SET name=?, price=?, description=? WHERE id=?")) {
+            statement.setString(1, "editItem" + newName);
+            statement.setDouble(2, newPrice);
+            statement.setString(3, newDescription);
+            statement.setInt(4, itemId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 상품 추가
+    public void addItem(String name, double price, String description) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement statement = connection.prepareStatement("INSERT INTO products (name, price, description) VALUES (?, ?, ?)")) {
+            statement.setString(1, "addItem" + name);
+            statement.setDouble(2, price);
+            statement.setString(3, description);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 상품 삭제
+    public void deleteItem(int itemId) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement statement = connection.prepareStatement("DELETE FROM products WHERE id=?")) {
+            statement.setInt(1, itemId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 회원 탈퇴 수락
+    public void resignAccept(int userId) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement statement = connection.prepareStatement("DELETE FROM users WHERE id=?")) {
+            statement.setInt(1, userId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+	
 }
