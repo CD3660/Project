@@ -39,6 +39,4 @@ public class ItemDTO {
 	public void setIdx(int idx) {
 		this.idx = idx;
 	}
-	
-	
 }

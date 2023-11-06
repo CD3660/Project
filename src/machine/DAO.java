@@ -11,26 +11,30 @@ import java.util.Scanner;
 public class DAO {
 	Scanner sc;
 	int userIndex, itemSort;
-	String[] searchLog;
+	String[] searchLog;//[0] 검색어 [1] 검색 방법 1 = 이름 2= 종류
 	CustomerDTO cDto;
 	ItemDTO iDto;
-	OrderListDTO oDto;
 	ArrayList<ItemDTO> itemDtos;
-
-	
-	
-	
-	
-	
+	ArrayList<OrderListDTO> orderListDtos;
+	Connection conn;
 	// 임시
-	private static final String DB_URL = "jdbc:mysql://localhost:3306/database";
-	private static final String DB_USER = "username";
-	private static final String DB_PASSWORD = "password";
-
+	private final String DB_URL = "jdbc:mysql://localhost:3306/database";
+	private final String DB_USER = "username";
+	private final String DB_PASSWORD = "password";
+	private final String itemSortName = "select idx, name, price, type, info from itemdto where name = ?";
+	private final String itemSortType = "select idx, name, price, type, info from itemdto where type = ?";
+	private final String[] itemSortStr;
 	public DAO() {
 		sc = new Scanner(System.in);
-		searchLog = new String[2];
+		searchLog = new String[3];
 		itemSort = 1;
+		itemSortStr = new String[7];
+		itemSortStr[1] = " order by idx";
+		itemSortStr[2] = " order by idx decs";
+		itemSortStr[3] = " order by name";
+		itemSortStr[4] = " order by name decs";
+		itemSortStr[5] = " order by price";
+		itemSortStr[6] = " order by price decs";
 	}
 
 	public void loginMenu() {
@@ -139,8 +143,79 @@ public class DAO {
 
 	}
 
-	public void display() {
+	public void displayUserInfo(String id) {
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			PreparedStatement ps = conn.prepareStatement(
+					"select address, phone, email, point, grade, manager from customerdto where id = ?");
+			ps.setString(1, id);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				System.out.println("주소 : " + rs.getString("address"));
+				System.out.println("전화번호 : " + rs.getInt("phone"));
+				System.out.println("이메일 : " + rs.getString("email"));
+				System.out.println("잔여 포인트 : " + rs.getString("point"));
+				if (rs.getInt("manager") == 1) {
+					System.out.println("관리자 : TRUE");
+				} else {
+					System.out.println("관리자 : FALSE");
+				}
+			} else {
+				System.out.println("올바른 아이디가 아닙니다.");
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			closeConn();
+		}
 
+	}
+
+	public void displayItemList() {
+		String temp = "";
+		if(searchLog[1].equals("1")) {
+			temp += itemSortName;
+		} else {
+			temp += itemSortType;
+		}
+		temp+= itemSortStr[itemSort];
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			PreparedStatement ps = conn
+					.prepareStatement("");
+			ps.setString(1, searchLog[0]);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				System.out.print("상품번호 : " + rs.getInt("idx") + " 이름 : " + rs.getString("name"));
+				System.out.println("가격 : " + rs.getInt("price") + " 종류 : " + rs.getString("type"));
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			closeConn();
+		}
+	}
+
+	public void displayItemInfo(int idx) {
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			PreparedStatement ps = conn
+					.prepareStatement("select idx, name, price, type, info from itemdto where idx = ?");
+			ps.setInt(1, idx);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				System.out.println("상품번호 : " + rs.getInt("idx") + " 이름 : " + rs.getString("name"));
+				System.out.println("가격 : " + rs.getInt("price") + " 종류 : " + rs.getString("type"));
+				System.out.println("상품 정보");
+				System.out.println(rs.getString("info"));
+			} else {
+				System.out.println("해당하는 상품이 없습니다.");
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			closeConn();
+		}
 	}
 
 	public int getInt() {
@@ -151,6 +226,18 @@ public class DAO {
 			} catch (Exception e) {
 				System.out.println("숫자를 입력하세요.");
 			}
+		}
+	}
+
+	public void closeConn() {
+		try {
+			if (!conn.isClosed()) {
+				conn.close();
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			conn = null;
 		}
 	}
 
@@ -166,6 +253,10 @@ public class DAO {
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+		} catch (Exception e) {
 		}
 	}
 
