@@ -102,13 +102,13 @@ public class DAO {
 				String temp = sc.nextLine();
 				switch (temp) {
 				case "1":
-//				addItem();
+				addItem();
 					break;
 				case "2":
-//				editItem();
+				editItem();
 					break;
 				case "3":
-//				deleteItem();
+				deleteItem();
 					break;
 				case "4":
 //				resignAccept();
@@ -176,7 +176,7 @@ public class DAO {
 	public void displayItemList() {
 		System.out.println("==========================================================================");
 		for (ItemDTO dto : itemDtos) {
-			System.out.print("상품번호 : " + dto.getIdx() + " 이름 : " + dto.getProductName());
+			System.out.print("상품번호 : " + dto.getIdx() + " 이름 : " + dto.getName());
 			System.out.println("가격 : " + dto.getPrice() + " 종류 : " + dto.getType());
 		}
 		System.out.println("==========================================================================");
@@ -209,7 +209,7 @@ public class DAO {
 	public void displayOrderList() {
 		for (OrderListDTO dto : orderListDtos) {
 			System.out.println("주문번호 : " + dto.getIndex() + " 상품번호 : " + dto.getIndex());
-			System.out.println("가격 : " + rs.getInt("price") + " 종류 : " + rs.getString("type"));
+//			System.out.println("가격 : " + rs.getInt("price") + " 종류 : " + rs.getString("type"));
 		}
 	}
 	
@@ -237,7 +237,7 @@ public class DAO {
 	}
 
 	// 상품 정보 수정
-	public void editItemPrice(int itemId, String newName, double newPrice, String newDescription) {
+	public void editItem() {
 		int idx = getInt();
 //    	displayItem(idx);
 		int temp = 0;
@@ -304,9 +304,9 @@ public class DAO {
 				PreparedStatement statement = connection.prepareStatement(
 						"INSERT INTO products (idx, name, price, type, info) VALUES (item_seq.nextval, ?, ?, ?, ?)")) {
 
-			statement.setString(1, dto.getProductName());
+			statement.setString(1, dto.getName());
 			statement.setDouble(2, dto.getPrice());
-			statement.setString(3, dto.getDescription());
+			statement.setString(3, dto.getName());
 			statement.setString(4, dto.getType());
 			int temp = statement.executeUpdate();
 			System.out.println("추가 되었습니다");
@@ -404,7 +404,7 @@ public class DAO {
 				while (rs.next()) {
 					ItemDTO dto = new ItemDTO();
 					dto.setIdx(rs.getInt("idx"));
-					dto.setProductName(rs.getString("name"));
+					dto.setName(rs.getString("name"));
 					dto.setPrice(rs.getInt("price"));
 					dto.setType(rs.getString("type"));
 					dto.setInfo(rs.getString("info"));
@@ -421,7 +421,7 @@ public class DAO {
 	// 상품 구매
 	public void purchase() {
 		ItemDTO iDto = new ItemDTO();
-		int itemOption = sc.nextLine()
+//		int itemOption = sc.nextLine()
 		
 		
 		
@@ -433,7 +433,7 @@ public class DAO {
 	
 	
 	
-}
+
 	public void purchaseCart() {
 		System.out.println("장바구니 내역입니다.");
 		try {
