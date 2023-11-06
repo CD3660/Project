@@ -454,7 +454,12 @@ public class DAO {
 	
 
 	// 상품 구매
-//public void purchase() {
+	public void purchase() {
+		
+		
+		
+		
+	}
 //	ItemDTO iDto = new ItemDTO();
 //	int itemOption = sc.nextLine()
 	
