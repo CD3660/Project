@@ -18,11 +18,11 @@ public class DAO {
 	ArrayList<OrderListDTO> orderListDtos;
 	Connection conn;
 	// 임시
-	private final String DB_URL = "jdbc:oracle:thin:@118.40.91.135:1521:xe";
-	private final String DB_USER = "BTEAM";
-	private final String DB_PASSWORD = "BTEAM2";
-	private final String itemSortName = " where name = ?";
-	private final String itemSortType = " where type = ?";
+	private final String DB_URL = "jdbc:mysql://localhost:3306/database";
+	private final String DB_USER = "username";
+	private final String DB_PASSWORD = "password";
+	private final String itemSortName = " where name like ?";
+	private final String itemSortType = " where type like ?";
 	private final String[] itemSortStr;
 
 	public DAO() {
@@ -401,49 +401,67 @@ public class DAO {
 		itemDtos = new ArrayList<>();
 
 		System.out.println("상품 검색을 선택하셨습니다. 1.이름으로 검색  2.상품 종류로 검색");
-		String option = sc.nextLine();
+		String option;
 		while (true) {
+			option = sc.nextLine();
 			if (option.equals("1") || option.equals("2")) {
 				break;
 			} else {
 				System.out.println("잘못된 입력");
 			}
-
-			String temp = "select idx, name, price, type, info from itemdto";
-			if (option.equals("1")) {
-				temp += itemSortName;
-				temp += itemSortStr[1];
-			} else {
-				temp += itemSortType;
-				temp += itemSortStr[3];
-			}
-
-			try {
-				Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-				PreparedStatement ps = connection.prepareStatement("temp");
-				ResultSet rs = ps.executeQuery();
-				while (rs.next()) {
-					ItemDTO dto = new ItemDTO();
-					dto.setIdx(rs.getInt("idx"));
-					dto.setName(rs.getString("name"));
-					dto.setPrice(rs.getInt("price"));
-					dto.setType(rs.getString("type"));
-					dto.setInfo(rs.getString("info"));
-
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
+		String temp = "select idx, name, price, type, info from itemdto";
+		if (option.equals("1")) {
+			temp += itemSortName;
+			temp += itemSortStr[1];
+		} else {
+			temp += itemSortType;
+			temp += itemSortStr[3];
+		}
+
+		try {
+			Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			PreparedStatement ps = connection.prepareStatement("temp");
+			System.out.println("검색어를 입력하세요.");
+			ps.setString(1, "%"+sc.nextLine()+"%");
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+
+				ItemDTO dto = new ItemDTO();
+				dto.setIdx(rs.getInt("idx"));
+				dto.setName(rs.getString("name"));
+				dto.setPrice(rs.getInt("price"));
+				dto.setType(rs.getString("type"));
+				if (rs.getString("info") == null) {
+					dto.setInfo("");
+				} else {
+					dto.setInfo(rs.getString("info"));
+				}
+				itemDtos.add(dto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			closeConn();
+
+		}
+		displayItemList();
+
 	}
+
+	
+	
 
 	// 상품 구매
-	public void purchase() {
-		ItemDTO iDto = new ItemDTO();
-//		int itemOption = sc.nextLine()
-
-	}
-
+//public void purchase() {
+//	ItemDTO iDto = new ItemDTO();
+//	int itemOption = sc.nextLine()
+	
+	
+	
+	
+	
 	public void purchaseCart() {
 		System.out.println("장바구니 내역입니다.");
 		try {
