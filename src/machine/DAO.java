@@ -12,8 +12,7 @@ import javax.security.auth.login.LoginContext;
 
 public class DAO {
 	Scanner sc;
-	int itemSort;
-	String id;
+	int userIndex, itemSort;
 	String[] searchLog;// [0] 검색어 [1] 검색 방법 1 = 이름 2= 종류
 	CustomerDTO cDto;
 	ItemDTO iDto;
@@ -48,42 +47,42 @@ public class DAO {
 			switch (temp) {
 			case "1":
 //				userIndex = login();
-				if (id != null) {
+				if (userIndex != -1) {
 					userMenu();
 				}
 				break;
 			case "2":
-				createUser();
+//				createUser();
 				break;
 			case "0":
 				break point;
 			default:
 				System.out.println("입력 오류");
 				break;
-				
+
 			}
 		}
 	}
+
 	public String login(String username, String password) {
 		System.out.println("아이디와 비밀번호를 입력해주세요.");
 		String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, sc.nextLine());
-            ps.setString(2, sc.nextLine());
-            ResultSet rs = ps.executeQuery();
-            
-            
-            if (rs.next()) {
-                return rs.getString("id");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        
-        System.out.println("다시 입력 해주세요");
-        return null;
- 
+		try {
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, sc.nextLine());
+			ps.setString(2, sc.nextLine());
+			ResultSet rs = ps.executeQuery();
+
+			if (rs.next()) {
+				return rs.getString("id");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("다시 입력 해주세요");
+		return null;
+
 	}
 
 	public void userMenu() {
@@ -127,13 +126,13 @@ public class DAO {
 				String temp = sc.nextLine();
 				switch (temp) {
 				case "1":
-				addItem();
+					addItem();
 					break;
 				case "2":
-				editItem();
+					editItem();
 					break;
 				case "3":
-				deleteItem();
+					deleteItem();
 					break;
 				case "4":
 //				resignAccept();
@@ -199,46 +198,12 @@ public class DAO {
 	}
 
 	public void displayItemList() {
-<<<<<<< HEAD
 		System.out.println("==========================================================================");
 		for (ItemDTO dto : itemDtos) {
 			System.out.print("상품번호 : " + dto.getIdx() + " 이름 : " + dto.getName());
 			System.out.println("가격 : " + dto.getPrice() + " 종류 : " + dto.getType());
 		}
 		System.out.println("==========================================================================");
-=======
-<<<<<<< HEAD
-		String temp = "";
-		if (searchLog[1].equals("1")) {
-=======
-		String temp = "select idx, name, price, type, info from itemdto";
-		if(searchLog[1].equals("1")) {
->>>>>>> main
-			temp += itemSortName;
-		} else {
-			temp += itemSortType;
-		}
-		temp += itemSortStr[itemSort];
-		try {
-			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-<<<<<<< HEAD
-			PreparedStatement ps = conn.prepareStatement("");
-=======
-			PreparedStatement ps = conn.prepareStatement(temp);
->>>>>>> main
-			ps.setString(1, searchLog[0]);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				System.out.print("상품번호 : " + rs.getInt("idx") + " 이름 : " + rs.getString("name"));
-				System.out.println("가격 : " + rs.getInt("price") + " 종류 : " + rs.getString("type"));
-			}
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			closeConn();
-		}
-		}
->>>>>>> bch
 	}
 
 	public void displayItemInfo(int idx) {
@@ -271,7 +236,7 @@ public class DAO {
 //			System.out.println("가격 : " + rs.getInt("price") + " 종류 : " + rs.getString("type"));
 		}
 	}
-	
+
 	public int getInt() {
 		while (true) {
 			try {
@@ -296,11 +261,8 @@ public class DAO {
 	}
 
 	// 상품 정보 수정
-<<<<<<< HEAD
+
 	public void editItem() {
-=======
-	public void editItemPrice(int itemId, String newName, double newPrice, String newinfo) {
->>>>>>> bch
 		int idx = getInt();
 //    	displayItem(idx);
 		int temp = 0;
@@ -369,11 +331,7 @@ public class DAO {
 
 			statement.setString(1, dto.getName());
 			statement.setDouble(2, dto.getPrice());
-<<<<<<< HEAD
-			statement.setString(3, dto.getName());
-=======
 			statement.setString(3, dto.getInfo());
->>>>>>> bch
 			statement.setString(4, dto.getType());
 			int temp = statement.executeUpdate();
 			System.out.println("추가 되었습니다");
@@ -387,14 +345,14 @@ public class DAO {
 	public void deleteItem() {
 		System.out.println("삭제하려는 상품 번호를 입력 하세요.");
 		int temp = getInt();
-		
+
 		try {
 			PreparedStatement ps = conn.prepareStatement("DELETE FROM itemdto WHERE id=?");
 			ps.setInt(1, temp);
 			int tempx = ps.executeUpdate();
-			if(tempx == 1) {
+			if (tempx == 1) {
 				System.out.println("삭제가 되었습니다.");
-			}else {
+			} else {
 				System.out.println("해당하는 상품이 없습니다.");
 			}
 		} catch (SQLException e) {
@@ -406,9 +364,9 @@ public class DAO {
 	public void resignAccept(int userId) {
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 				PreparedStatement statement = connection.prepareStatement("DELETE FROM users WHERE resign=1")) {
-			
+
 			int result = statement.executeUpdate();
-			System.out.println(result +" 명 회원 탈퇴 수락 완료.");
+			System.out.println(result + " 명 회원 탈퇴 수락 완료.");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -448,7 +406,6 @@ public class DAO {
 
 		System.out.println("상품 검색을 선택하셨습니다. 1.이름으로 검색  2.상품 종류로 검색");
 		String option = sc.nextLine();
-<<<<<<< HEAD
 		while (true) {
 			if (option.equals("1") || option.equals("2")) {
 				break;
@@ -480,30 +437,7 @@ public class DAO {
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
-
-=======
-		String temp = "select idx, name, price, type, info from itemdto";
-	      if(searchLog[1].equals("1")) {
-	         temp += itemSortName;
-	      } else {
-	         temp += itemSortType;
-	      }
-	      temp+= itemSortStr[itemSort];
-		try {
-			Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-			PreparedStatement ps = connection.prepareStatement("temp");
-			ResultSet rs = ps.executeQuery();
-			if (option.equals("1")) {
-				while (rs.next()) {
-					System.out.println(rs.getString(iDto.getName()));
-				}
-			} else if (option.equals("2")) {
-				while (rs.next()) {
-					System.out.println(rs.getString(iDto.getType()));
-				}
->>>>>>> bch
 			}
-
 		}
 	}
 
@@ -511,28 +445,19 @@ public class DAO {
 	public void purchase() {
 		ItemDTO iDto = new ItemDTO();
 //		int itemOption = sc.nextLine()
-		
-		
-		
-		
-	
+
 	}
-	
-	
-	
-	
-	
 
 	public void purchaseCart() {
 		System.out.println("장바구니 내역입니다.");
 		try {
 			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-			PreparedStatement ps = conn
-					.prepareStatement("select idx, item, price, quantity from orderlistdto, itemdto where id = ? and purchased = 0");
+			PreparedStatement ps = conn.prepareStatement(
+					"select idx, item, price, quantity from orderlistdto, itemdto where id = ? and purchased = 0");
 			ps.setString(1, cDto.getId());
 			ResultSet rs = ps.executeQuery();
 			orderListDtos = new ArrayList<>();
-			while(rs.next()) {
+			while (rs.next()) {
 				OrderListDTO dto = new OrderListDTO();
 				dto.setIndex(rs.getInt("idx"));
 				dto.setItem(rs.getInt("item"));
