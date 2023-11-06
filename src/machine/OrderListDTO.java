@@ -2,7 +2,7 @@ package machine;
 
 public class OrderListDTO {
 	private int index, item, quantity;
-	private String date;
+	private String pdate, id;
 	private boolean purchased;
 	
 	public int getIndex() {
@@ -24,16 +24,28 @@ public class OrderListDTO {
 		this.quantity = quantity;
 	}
 	public String getDate() {
-		return date;
+		return pdate;
 	}
-	public void setDate(String date) {
-		this.date = date;
+	public void setDate(String pdate) {
+		this.pdate = pdate;
 	}
 	public boolean isPurchased() {
 		return purchased;
 	}
 	public void setPurchased(boolean purchased) {
 		this.purchased = purchased;
+	}
+	public String getPdate() {
+		return pdate;
+	}
+	public void setPdate(String pdate) {
+		this.pdate = pdate;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 }
