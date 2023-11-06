@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.security.auth.login.LoginContext;
+
 public class DAO {
 	Scanner sc;
 	int itemSort;
@@ -58,8 +60,30 @@ public class DAO {
 			default:
 				System.out.println("입력 오류");
 				break;
+				
 			}
 		}
+	}
+	public String login(String username, String password) {
+		System.out.println("아이디와 비밀번호를 입력해주세요.");
+		String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, sc.nextLine());
+            ps.setString(2, sc.nextLine());
+            ResultSet rs = ps.executeQuery();
+            
+            
+            if (rs.next()) {
+                return rs.getString("id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        System.out.println("다시 입력 해주세요");
+        return null;
+ 
 	}
 
 	public void userMenu() {
@@ -175,12 +199,46 @@ public class DAO {
 	}
 
 	public void displayItemList() {
+<<<<<<< HEAD
 		System.out.println("==========================================================================");
 		for (ItemDTO dto : itemDtos) {
 			System.out.print("상품번호 : " + dto.getIdx() + " 이름 : " + dto.getName());
 			System.out.println("가격 : " + dto.getPrice() + " 종류 : " + dto.getType());
 		}
 		System.out.println("==========================================================================");
+=======
+<<<<<<< HEAD
+		String temp = "";
+		if (searchLog[1].equals("1")) {
+=======
+		String temp = "select idx, name, price, type, info from itemdto";
+		if(searchLog[1].equals("1")) {
+>>>>>>> main
+			temp += itemSortName;
+		} else {
+			temp += itemSortType;
+		}
+		temp += itemSortStr[itemSort];
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+<<<<<<< HEAD
+			PreparedStatement ps = conn.prepareStatement("");
+=======
+			PreparedStatement ps = conn.prepareStatement(temp);
+>>>>>>> main
+			ps.setString(1, searchLog[0]);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				System.out.print("상품번호 : " + rs.getInt("idx") + " 이름 : " + rs.getString("name"));
+				System.out.println("가격 : " + rs.getInt("price") + " 종류 : " + rs.getString("type"));
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			closeConn();
+		}
+		}
+>>>>>>> bch
 	}
 
 	public void displayItemInfo(int idx) {
@@ -238,7 +296,11 @@ public class DAO {
 	}
 
 	// 상품 정보 수정
+<<<<<<< HEAD
 	public void editItem() {
+=======
+	public void editItemPrice(int itemId, String newName, double newPrice, String newinfo) {
+>>>>>>> bch
 		int idx = getInt();
 //    	displayItem(idx);
 		int temp = 0;
@@ -307,7 +369,11 @@ public class DAO {
 
 			statement.setString(1, dto.getName());
 			statement.setDouble(2, dto.getPrice());
+<<<<<<< HEAD
 			statement.setString(3, dto.getName());
+=======
+			statement.setString(3, dto.getInfo());
+>>>>>>> bch
 			statement.setString(4, dto.getType());
 			int temp = statement.executeUpdate();
 			System.out.println("추가 되었습니다");
@@ -382,6 +448,7 @@ public class DAO {
 
 		System.out.println("상품 검색을 선택하셨습니다. 1.이름으로 검색  2.상품 종류로 검색");
 		String option = sc.nextLine();
+<<<<<<< HEAD
 		while (true) {
 			if (option.equals("1") || option.equals("2")) {
 				break;
@@ -414,6 +481,27 @@ public class DAO {
 			} catch (SQLException e) {
 				e.printStackTrace();
 
+=======
+		String temp = "select idx, name, price, type, info from itemdto";
+	      if(searchLog[1].equals("1")) {
+	         temp += itemSortName;
+	      } else {
+	         temp += itemSortType;
+	      }
+	      temp+= itemSortStr[itemSort];
+		try {
+			Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			PreparedStatement ps = connection.prepareStatement("temp");
+			ResultSet rs = ps.executeQuery();
+			if (option.equals("1")) {
+				while (rs.next()) {
+					System.out.println(rs.getString(iDto.getName()));
+				}
+			} else if (option.equals("2")) {
+				while (rs.next()) {
+					System.out.println(rs.getString(iDto.getType()));
+				}
+>>>>>>> bch
 			}
 
 		}
