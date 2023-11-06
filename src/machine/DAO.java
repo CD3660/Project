@@ -378,41 +378,47 @@ public class DAO {
 	public void searchItem() {
 
 		itemDtos = new ArrayList<>();
-		
+
 		System.out.println("상품 검색을 선택하셨습니다. 1.이름으로 검색  2.상품 종류로 검색");
 		String option = sc.nextLine();
-		String temp = "select idx, name, price, type, info from itemdto";
-	      if(searchLog[1].equals("1")) {
-	         temp += itemSortName;
-	      } else {
-	         temp += itemSortType;
-	      }
-	      temp+= itemSortStr[itemSort];
-		try {
-			Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-			PreparedStatement ps = connection.prepareStatement("temp");
-			ResultSet rs = ps.executeQuery();
-			if (option.equals("1")) {
-				while (rs.next()) {
-					System.out.println(rs.getString(iDto.getProductName()));
-				}
-			} else if (option.equals("2")) {
-				while (rs.next()) {
-					System.out.println(rs.getString(iDto.getType()));
-				}
+		while (true) {
+			if (option.equals("1") || option.equals("2")) {
+				break;
+			} else {
+				System.out.println("잘못된 입력");
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+
+			String temp = "select idx, name, price, type, info from itemdto";
+			if (option.equals("1")) {
+				temp += itemSortName;
+				temp += itemSortStr[1];
+			} else {
+				temp += itemSortType;
+				temp += itemSortStr[3];
+			}
+
+			try {
+				Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+				PreparedStatement ps = connection.prepareStatement("temp");
+				ResultSet rs = ps.executeQuery();
+				while (rs.next()) {
+					ItemDTO dto = new ItemDTO();
+					dto.setIdx(rs.getInt("idx"));
+					dto.setProductName(rs.getString("name"));
+					dto.setPrice(rs.getInt("price"));
+					dto.setType(rs.getString("type"));
+					dto.setInfo(rs.getString("info"));
+
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+
+			}
 
 		}
-
 	}
-	
-	
-	
-	
-	
-	//상품 구매
+
+	// 상품 구매
 	public void purchase() {
 		ItemDTO iDto = new ItemDTO();
 		int itemOption = sc.nextLine()
