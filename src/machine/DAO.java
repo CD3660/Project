@@ -311,11 +311,11 @@ public class DAO {
 				int result = ps.executeUpdate();
 				if (result == 1) {
 					System.out.println("회원가입이 되셨습니다. 로그인해주세요.");
-					//login();
+					// login();
 				} else {
 					System.out.println("입력오류. 다시 진행해주세요.");
 					break;
-					
+
 				}
 			} catch (SQLException e1) {
 				e1.printStackTrace();
@@ -323,4 +323,57 @@ public class DAO {
 		}
 	}
 
+	// 상품 검색
+	public void searchItem() {
+
+		itemDtos = new ArrayList<>();
+		
+		System.out.println("상품 검색을 선택하셨습니다. 1.이름으로 검색  2.상품 종류로 검색");
+		String option = sc.nextLine();
+		String temp = "select idx, name, price, type, info from itemdto";
+	      if(searchLog[1].equals("1")) {
+	         temp += itemSortName;
+	      } else {
+	         temp += itemSortType;
+	      }
+	      temp+= itemSortStr[itemSort];
+		try {
+			Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			PreparedStatement ps = connection.prepareStatement("temp");
+			ResultSet rs = ps.executeQuery();
+			if (option.equals("1")) {
+				while (rs.next()) {
+					System.out.println(rs.getString(iDto.getProductName()));
+				}
+			} else if (option.equals("2")) {
+				while (rs.next()) {
+					System.out.println(rs.getString(iDto.getType()));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		}
+
+	}
+	
+	
+	
+	
+	
+	//상품 구매
+	public void purchase() {
+		ItemDTO iDto = new ItemDTO();
+		int itemOption = sc.nextLine()
+		
+		
+		
+		
+	
+	}
+	
+	
+	
+	
+	
 }
