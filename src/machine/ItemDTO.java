@@ -2,7 +2,7 @@ package machine;
 
 public class ItemDTO {
 	private String productName, Type, Description;
-	private int price, stock, index;
+	private int price, stock, idx;
 	public String getProductName() {
 		return productName;
 	}
@@ -33,11 +33,11 @@ public class ItemDTO {
 	public void setStock(int stock) {
 		this.stock = stock;
 	}
-	public int getIndex() {
-		return index;
+	public int getIdx() {
+		return idx;
 	}
-	public void setIndex(int index) {
-		this.index = index;
+	public void setIdx(int idx) {
+		this.idx = idx;
 	}
 	
 	

@@ -1,9 +1,15 @@
 package machine;
 
 public class CustomerDTO {
-	private String id, pw, address, number, email, cart, purchase;
-	private int point, level; 
-	private boolean manager;
+	private String id, pw, address, phone, email;
+	private int point, grade; 
+	private boolean manager, resign;
+	public boolean isResign() {
+		return resign;
+	}
+	public void setResign(boolean resign) {
+		this.resign = resign;
+	}
 	public String getId() {
 		return id;
 	}
@@ -22,29 +28,11 @@ public class CustomerDTO {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public String getNumber() {
-		return number;
-	}
-	public void setNumber(String number) {
-		this.number = number;
-	}
 	public String getEmail() {
 		return email;
 	}
 	public void setEmail(String email) {
 		this.email = email;
-	}
-	public String getCart() {
-		return cart;
-	}
-	public void setCart(String cart) {
-		this.cart = cart;
-	}
-	public String getPurchase() {
-		return purchase;
-	}
-	public void setPurchase(String purchase) {
-		this.purchase = purchase;
 	}
 	public int getPoint() {
 		return point;
@@ -52,19 +40,24 @@ public class CustomerDTO {
 	public void setPoint(int point) {
 		this.point = point;
 	}
-	public int getLevel() {
-		return level;
-	}
-	public void setLevel(int level) {
-		this.level = level;
-	}
 	public boolean isManager() {
 		return manager;
 	}
 	public void setManager(boolean manager) {
 		this.manager = manager;
 	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public int getGrade() {
+		return grade;
+	}
+	public void setGrade(int grade) {
+		this.grade = grade;
+	}
 	
-	
-	
+
 }
