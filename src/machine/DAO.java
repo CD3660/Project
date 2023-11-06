@@ -212,7 +212,7 @@ public class DAO {
 			System.out.println("가격 : " + rs.getInt("price") + " 종류 : " + rs.getString("type"));
 		}
 	}
-	
+
 	public int getInt() {
 		while (true) {
 			try {
@@ -320,14 +320,14 @@ public class DAO {
 	public void deleteItem() {
 		System.out.println("삭제하려는 상품 번호를 입력 하세요.");
 		int temp = getInt();
-		
+
 		try {
 			PreparedStatement ps = conn.prepareStatement("DELETE FROM itemdto WHERE id=?");
 			ps.setInt(1, temp);
 			int tempx = ps.executeUpdate();
-			if(tempx == 1) {
+			if (tempx == 1) {
 				System.out.println("삭제가 되었습니다.");
-			}else {
+			} else {
 				System.out.println("해당하는 상품이 없습니다.");
 			}
 		} catch (SQLException e) {
@@ -339,9 +339,9 @@ public class DAO {
 	public void resignAccept(int userId) {
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 				PreparedStatement statement = connection.prepareStatement("DELETE FROM users WHERE resign=1")) {
-			
+
 			int result = statement.executeUpdate();
-			System.out.println(result +" 명 회원 탈퇴 수락 완료.");
+			System.out.println(result + " 명 회원 탈퇴 수락 완료.");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -380,70 +380,77 @@ public class DAO {
 		itemDtos = new ArrayList<>();
 
 		System.out.println("상품 검색을 선택하셨습니다. 1.이름으로 검색  2.상품 종류로 검색");
-		String option = sc.nextLine();
+		String option;
 		while (true) {
+			option = sc.nextLine();
 			if (option.equals("1") || option.equals("2")) {
 				break;
 			} else {
 				System.out.println("잘못된 입력");
 			}
+		}
+		String temp = "select idx, name, price, type, info from itemdto";
+		if (option.equals("1")) {
+			temp += itemSortName;
+			temp += itemSortStr[1];
+		} else {
+			temp += itemSortType;
+			temp += itemSortStr[3];
+		}
 
-			String temp = "select idx, name, price, type, info from itemdto";
-			if (option.equals("1")) {
-				temp += itemSortName;
-				temp += itemSortStr[1];
-			} else {
-				temp += itemSortType;
-				temp += itemSortStr[3];
-			}
+		try {
+			Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			PreparedStatement ps = connection.prepareStatement("temp");
+			System.out.println("검색어를 입력하세요.");
+			ps.setString(1, "%"+sc.nextLine()+"%");
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
 
-			try {
-				Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-				PreparedStatement ps = connection.prepareStatement("temp");
-				ResultSet rs = ps.executeQuery();
-				while (rs.next()) {
-					ItemDTO dto = new ItemDTO();
-					dto.setIdx(rs.getInt("idx"));
-					dto.setProductName(rs.getString("name"));
-					dto.setPrice(rs.getInt("price"));
-					dto.setType(rs.getString("type"));
+				ItemDTO dto = new ItemDTO();
+				dto.setIdx(rs.getInt("idx"));
+				dto.setName(rs.getString("name"));
+				dto.setPrice(rs.getInt("price"));
+				dto.setType(rs.getString("type"));
+				if (rs.getString("info") == null) {
+					dto.setInfo("");
+				} else {
 					dto.setInfo(rs.getString("info"));
-
 				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-
+				itemDtos.add(dto);
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			closeConn();
 
 		}
+		displayItemList();
+
 	}
 
+	
+	
+
 	// 상품 구매
-	public void purchase() {
-		ItemDTO iDto = new ItemDTO();
-		int itemOption = sc.nextLine()
-		
-		
-		
-		
-	
-	}
+//public void purchase() {
+//	ItemDTO iDto = new ItemDTO();
+//	int itemOption = sc.nextLine()
 	
 	
 	
 	
 	
-}
 	public void purchaseCart() {
 		System.out.println("장바구니 내역입니다.");
 		try {
 			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-			PreparedStatement ps = conn
-					.prepareStatement("select idx, item, price, quantity from orderlistdto, itemdto where id = ? and purchased = 0");
+			PreparedStatement ps = conn.prepareStatement(
+					"select idx, item, price, quantity from orderlistdto, itemdto where id = ? and purchased = 0");
 			ps.setString(1, cDto.getId());
 			ResultSet rs = ps.executeQuery();
 			orderListDtos = new ArrayList<>();
-			while(rs.next()) {
+			while (rs.next()) {
 				OrderListDTO dto = new OrderListDTO();
 				dto.setIndex(rs.getInt("idx"));
 				dto.setItem(rs.getInt("item"));
