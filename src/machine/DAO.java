@@ -13,12 +13,12 @@ public class DAO {
 	CustomerDTO cDto;
 	ItemDTO iDto;
 	OrderListDTO oDto;
-	
-	//임시
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/database";
-    private static final String DB_USER = "username";
-    private static final String DB_PASSWORD = "password";
-	
+
+	// 임시
+	private static final String DB_URL = "jdbc:mysql://localhost:3306/database";
+	private static final String DB_USER = "username";
+	private static final String DB_PASSWORD = "password";
+
 	public DAO() {
 		sc = new Scanner(System.in);
 		searchLog = new String[2];
@@ -132,9 +132,9 @@ public class DAO {
 	}
 
 	public void display() {
-		
+
 	}
-	
+
 	public int getInt() {
 		while (true) {
 			try {
@@ -146,53 +146,82 @@ public class DAO {
 		}
 	}
 
-	 // 상품 정보 수정
-    public void editItemPrice(int itemId, String newName, double newPrice, String newDescription) {
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement statement = connection.prepareStatement("UPDATE products SET name=?, price=?, description=? WHERE id=?")) {
-            statement.setString(1, "editItem" + newName);
-            statement.setDouble(2, newPrice);
-            statement.setString(3, newDescription);
-            statement.setInt(4, itemId);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+	// 상품 정보 수정
+	public void editItemPrice(int itemId, String newName, double newPrice, String newDescription) {
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+				PreparedStatement statement = connection
+						.prepareStatement("UPDATE products SET name=?, price=?, description=? WHERE id=?")) {
+			statement.setString(1, "editItem" + newName);
+			statement.setDouble(2, newPrice);
+			statement.setString(3, newDescription);
+			statement.setInt(4, itemId);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
-    // 상품 추가
-    public void addItem(String name, double price, String description) {
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement statement = connection.prepareStatement("INSERT INTO products (name, price, description) VALUES (?, ?, ?)")) {
-            statement.setString(1, "addItem" + name);
-            statement.setDouble(2, price);
-            statement.setString(3, description);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+	// 상품 추가
+	public void addItem(String name, double price, String description) {
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+				PreparedStatement statement = connection
+						.prepareStatement("INSERT INTO products (name, price, description) VALUES (?, ?, ?)")) {
+			statement.setString(1, "addItem" + name);
+			statement.setDouble(2, price);
+			statement.setString(3, description);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
-    // 상품 삭제
-    public void deleteItem(int itemId) {
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement statement = connection.prepareStatement("DELETE FROM products WHERE id=?")) {
-            statement.setInt(1, itemId);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+	// 상품 삭제
+	public void deleteItem(int itemId) {
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+				PreparedStatement statement = connection.prepareStatement("DELETE FROM products WHERE id=?")) {
+			statement.setInt(1, itemId);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
-    // 회원 탈퇴 수락
-    public void resignAccept(int userId) {
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement statement = connection.prepareStatement("DELETE FROM users WHERE id=?")) {
-            statement.setInt(1, userId);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-	
+	// 회원 탈퇴 수락
+	public void resignAccept(int userId) {
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+				PreparedStatement statement = connection.prepareStatement("DELETE FROM users WHERE id=?")) {
+			statement.setInt(1, userId);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// 회원가입
+	public void createUser() {
+		CustomerDTO cDto = new CustomerDTO();
+		while (true) {
+			System.out.println("회원가입을 위해 " + "아이디, 비밀번호 입력해주세요.");
+			cDto.setId(sc.nextLine());
+			cDto.setPw(sc.nextLine());
+			try {
+				Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+				PreparedStatement ps = connection.prepareStatement("INSERT INTO MEMBER VALUES ( ? , ? )");
+				ps.setString(1, cDto.getId());
+				ps.setString(2, cDto.getPw());
+				int result = ps.executeUpdate();
+				if (result == 1) {
+					System.out.println("회원가입이 되셨습니다. 로그인해주세요.");
+					//login();
+				} else {
+					System.out.println("입력오류. 다시 진행해주세요.");
+					break;
+					
+				}
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+
 }
