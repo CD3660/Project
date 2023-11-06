@@ -296,4 +296,31 @@ public class DAO {
 		}
 	}
 
+	// 회원가입
+	public void createUser() {
+		CustomerDTO cDto = new CustomerDTO();
+		while (true) {
+			System.out.println("회원가입을 위해 " + "아이디, 비밀번호 입력해주세요.");
+			cDto.setId(sc.nextLine());
+			cDto.setPw(sc.nextLine());
+			try {
+				Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+				PreparedStatement ps = connection.prepareStatement("INSERT INTO MEMBER VALUES ( ? , ? )");
+				ps.setString(1, cDto.getId());
+				ps.setString(2, cDto.getPw());
+				int result = ps.executeUpdate();
+				if (result == 1) {
+					System.out.println("회원가입이 되셨습니다. 로그인해주세요.");
+					//login();
+				} else {
+					System.out.println("입력오류. 다시 진행해주세요.");
+					break;
+					
+				}
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+
 }
