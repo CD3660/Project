@@ -11,19 +11,20 @@ import java.util.Scanner;
 public class DAO {
 	Scanner sc;
 	int userIndex, itemSort;
-	String[] searchLog;//[0] 검색어 [1] 검색 방법 1 = 이름 2= 종류
+	String[] searchLog;// [0] 검색어 [1] 검색 방법 1 = 이름 2= 종류
 	CustomerDTO cDto;
 	ItemDTO iDto;
 	ArrayList<ItemDTO> itemDtos;
 	ArrayList<OrderListDTO> orderListDtos;
 	Connection conn;
 	// 임시
-	private final String DB_URL = "jdbc:mysql://localhost:3306/database";
-	private final String DB_USER = "username";
-	private final String DB_PASSWORD = "password";
+	private final String DB_URL = "jdbc:oracle:thin:@118.40.91.135:1521:xe";
+	private final String DB_USER = "BTEAM";
+	private final String DB_PASSWORD = "BTEAM2";
 	private final String itemSortName = " where name = ?";
 	private final String itemSortType = " where type = ?";
 	private final String[] itemSortStr;
+
 	public DAO() {
 		sc = new Scanner(System.in);
 		searchLog = new String[3];
@@ -144,6 +145,7 @@ public class DAO {
 	}
 
 	public void displayUserInfo(String id) {
+		System.out.println("==========================================================================");
 		try {
 			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			PreparedStatement ps = conn.prepareStatement(
@@ -168,34 +170,20 @@ public class DAO {
 		} finally {
 			closeConn();
 		}
-
+		System.out.println("==========================================================================");
 	}
 
 	public void displayItemList() {
-		String temp = "select idx, name, price, type, info from itemdto";
-		if(searchLog[1].equals("1")) {
-			temp += itemSortName;
-		} else {
-			temp += itemSortType;
+		System.out.println("==========================================================================");
+		for (ItemDTO dto : itemDtos) {
+			System.out.print("상품번호 : " + dto.getIdx() + " 이름 : " + dto.getProductName());
+			System.out.println("가격 : " + dto.getPrice() + " 종류 : " + dto.getType());
 		}
-		temp+= itemSortStr[itemSort];
-		try {
-			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-			PreparedStatement ps = conn.prepareStatement(temp);
-			ps.setString(1, searchLog[0]);
-			ResultSet rs = ps.executeQuery();
-			while(rs.next()) {
-				System.out.print("상품번호 : " + rs.getInt("idx") + " 이름 : " + rs.getString("name"));
-				System.out.println("가격 : " + rs.getInt("price") + " 종류 : " + rs.getString("type"));
-			}
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			closeConn();
-		}
+		System.out.println("==========================================================================");
 	}
 
 	public void displayItemInfo(int idx) {
+		System.out.println("==========================================================================");
 		try {
 			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			PreparedStatement ps = conn
@@ -215,8 +203,16 @@ public class DAO {
 		} finally {
 			closeConn();
 		}
+		System.out.println("==========================================================================");
 	}
 
+	public void displayOrderList() {
+		for (OrderListDTO dto : orderListDtos) {
+			System.out.println("주문번호 : " + dto.getIndex() + " 상품번호 : " + dto.getIndex());
+			System.out.println("가격 : " + rs.getInt("price") + " 종류 : " + rs.getString("type"));
+		}
+	}
+	
 	public int getInt() {
 		while (true) {
 			try {
@@ -375,4 +371,27 @@ public class DAO {
 	
 	
 	
+}
+	public void purchaseCart() {
+		System.out.println("장바구니 내역입니다.");
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			PreparedStatement ps = conn
+					.prepareStatement("select idx, item, price, quantity from orderlistdto, itemdto where id = ? and purchased = 0");
+			ps.setString(1, cDto.getId());
+			ResultSet rs = ps.executeQuery();
+			orderListDtos = new ArrayList<>();
+			while(rs.next()) {
+				OrderListDTO dto = new OrderListDTO();
+				dto.setIndex(rs.getInt("idx"));
+				dto.setItem(rs.getInt("item"));
+				dto.setId(cDto.getId());
+				dto.setQuantity(rs.getInt("quantity"));
+				orderListDtos.add(dto);
+			}
+			displayOrderList();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }
