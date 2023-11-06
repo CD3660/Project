@@ -21,8 +21,8 @@ public class DAO {
 	private final String DB_URL = "jdbc:mysql://localhost:3306/database";
 	private final String DB_USER = "username";
 	private final String DB_PASSWORD = "password";
-	private final String itemSortName = "select idx, name, price, type, info from itemdto where name = ?";
-	private final String itemSortType = "select idx, name, price, type, info from itemdto where type = ?";
+	private final String itemSortName = " where name = ?";
+	private final String itemSortType = " where type = ?";
 	private final String[] itemSortStr;
 	public DAO() {
 		sc = new Scanner(System.in);
@@ -172,7 +172,7 @@ public class DAO {
 	}
 
 	public void displayItemList() {
-		String temp = "";
+		String temp = "select idx, name, price, type, info from itemdto";
 		if(searchLog[1].equals("1")) {
 			temp += itemSortName;
 		} else {
@@ -181,8 +181,7 @@ public class DAO {
 		temp+= itemSortStr[itemSort];
 		try {
 			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-			PreparedStatement ps = conn
-					.prepareStatement("");
+			PreparedStatement ps = conn.prepareStatement(temp);
 			ps.setString(1, searchLog[0]);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
