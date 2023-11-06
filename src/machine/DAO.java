@@ -10,7 +10,8 @@ import java.util.Scanner;
 
 public class DAO {
 	Scanner sc;
-	int userIndex, itemSort;
+	int itemSort;
+	String id;
 	String[] searchLog;// [0] 검색어 [1] 검색 방법 1 = 이름 2= 종류
 	CustomerDTO cDto;
 	ItemDTO iDto;
@@ -45,12 +46,12 @@ public class DAO {
 			switch (temp) {
 			case "1":
 //				userIndex = login();
-				if (userIndex != -1) {
+				if (id != null) {
 					userMenu();
 				}
 				break;
 			case "2":
-//				createUser();
+				createUser();
 				break;
 			case "0":
 				break point;
