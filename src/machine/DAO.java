@@ -238,43 +238,98 @@ public class DAO {
 
 	// 상품 정보 수정
 	public void editItemPrice(int itemId, String newName, double newPrice, String newDescription) {
-		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-				PreparedStatement statement = connection
-						.prepareStatement("UPDATE products SET name=?, price=?, description=? WHERE id=?")) {
-			statement.setString(1, "editItem" + newName);
-			statement.setDouble(2, newPrice);
-			statement.setString(3, newDescription);
-			statement.setInt(4, itemId);
-			statement.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		int idx = getInt();
+//    	displayItem(idx);
+		int temp = 0;
+		while (true) {
+			System.out.println("추가하려는 항목을 고르세요");
+			System.out.println("1. 이름 2. 가격 3. 정보");
+			temp = getInt();
+			if (temp <= 3 && temp >= 1) {
+				break;
+			} else {
+				System.out.println("1부터 3을 입력 하세요");
+			}
 		}
-		try {
-			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-		} catch (Exception e) {
+		String nameQ = "update products set name = ? where idx = ?";
+		String priceQ = "update products set price = ? where idx = ?";
+		String infoQ = "update products set info = ? where idx = ?";
+		switch (temp) {
+		case 1:
+
+			try {
+				PreparedStatement ps = conn.prepareStatement(nameQ);
+				ps.setString(1, sc.nextLine());
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			break;
+		case 2:
+			try {
+				PreparedStatement ps = conn.prepareStatement(priceQ);
+				ps.setInt(1, sc.nextInt());
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			break;
+		case 3:
+			try {
+				PreparedStatement ps = conn.prepareStatement(infoQ);
+				ps.setString(1, sc.nextLine());
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			break;
+		default:
+			break;
 		}
 	}
 
 	// 상품 추가
-	public void addItem(String name, double price, String description) {
+	public void addItem() {
+		System.out.println("상품을 추가합니다.");
+		ItemDTO dto = new ItemDTO();
+		System.out.println("이름을 입력하세요.");
+		dto.setName(sc.nextLine());
+		System.out.println("가격을 입력하세요.");
+		dto.setPrice(getInt());
+		System.out.println("종류를 입력하세요.");
+		dto.setType(sc.nextLine());
+		System.out.println("정보를 입력하세요.");
+		dto.setInfo(sc.nextLine());
+
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-				PreparedStatement statement = connection
-						.prepareStatement("INSERT INTO products (name, price, description) VALUES (?, ?, ?)")) {
-			statement.setString(1, "addItem" + name);
-			statement.setDouble(2, price);
-			statement.setString(3, description);
-			statement.executeUpdate();
+				PreparedStatement statement = connection.prepareStatement(
+						"INSERT INTO products (idx, name, price, type, info) VALUES (item_seq.nextval, ?, ?, ?, ?)")) {
+
+			statement.setString(1, dto.getProductName());
+			statement.setDouble(2, dto.getPrice());
+			statement.setString(3, dto.getDescription());
+			statement.setString(4, dto.getType());
+			int temp = statement.executeUpdate();
+			System.out.println("추가 되었습니다");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	// 상품 삭제
-	public void deleteItem(int itemId) {
-		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-				PreparedStatement statement = connection.prepareStatement("DELETE FROM products WHERE id=?")) {
-			statement.setInt(1, itemId);
-			statement.executeUpdate();
+	public void deleteItem() {
+		System.out.println("삭제하려는 상품 번호를 입력 하세요.");
+		int temp = getInt();
+		
+		try {
+			PreparedStatement ps = conn.prepareStatement("DELETE FROM itemdto WHERE id=?");
+			ps.setInt(1, temp);
+			int tempx = ps.executeUpdate();
+			if(tempx == 1) {
+				System.out.println("삭제가 되었습니다.");
+			}else {
+				System.out.println("해당하는 상품이 없습니다.");
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -283,9 +338,10 @@ public class DAO {
 	// 회원 탈퇴 수락
 	public void resignAccept(int userId) {
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-				PreparedStatement statement = connection.prepareStatement("DELETE FROM users WHERE id=?")) {
-			statement.setInt(1, userId);
-			statement.executeUpdate();
+				PreparedStatement statement = connection.prepareStatement("DELETE FROM users WHERE resign=1")) {
+			
+			int result = statement.executeUpdate();
+			System.out.println(result +" 명 회원 탈퇴 수락 완료.");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
