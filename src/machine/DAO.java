@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class DAO {
@@ -14,7 +15,13 @@ public class DAO {
 	CustomerDTO cDto;
 	ItemDTO iDto;
 	OrderListDTO oDto;
+	ArrayList<ItemDTO> itemDtos;
 
+	
+	
+	
+	
+	
 	// 임시
 	private static final String DB_URL = "jdbc:mysql://localhost:3306/database";
 	private static final String DB_USER = "username";
@@ -228,26 +235,30 @@ public class DAO {
 	// 상품 검색
 	public void searchItem() {
 
-		ItemDTO iDto = new ItemDTO();
+		itemDtos = new ArrayList<>();
+		
 		System.out.println("상품 검색을 선택하셨습니다. 1.이름으로 검색  2.상품 종류로 검색");
 		String option = sc.nextLine();
-
+		String temp = "select idx, name, price, type, info from itemdto";
+	      if(searchLog[1].equals("1")) {
+	         temp += itemSortName;
+	      } else {
+	         temp += itemSortType;
+	      }
+	      temp+= itemSortStr[itemSort];
 		try {
 			Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-			PreparedStatement ps = connection.prepareStatement("SELECT * FROM ItemDTO");
+			PreparedStatement ps = connection.prepareStatement("temp");
 			ResultSet rs = ps.executeQuery();
 			if (option.equals("1")) {
 				while (rs.next()) {
 					System.out.println(rs.getString(iDto.getProductName()));
-					System.out.println("구매하실 제품의 이름을 선택해주세요");
 				}
 			} else if (option.equals("2")) {
 				while (rs.next()) {
 					System.out.println(rs.getString(iDto.getType()));
-					System.out.println("구매하실 제품의 종류를 선택해주세요");
 				}
 			}
-			purchase();
 		} catch (SQLException e) {
 			e.printStackTrace();
 
@@ -262,6 +273,7 @@ public class DAO {
 	//상품 구매
 	public void purchase() {
 		ItemDTO iDto = new ItemDTO();
+		int itemOption = sc.nextLine()
 		
 		
 		
