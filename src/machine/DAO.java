@@ -8,8 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import javax.security.auth.login.LoginContext;
-
 public class DAO {
 	Scanner sc;
 	int userIndex, itemSort;
@@ -294,7 +292,6 @@ public class DAO {
 				PreparedStatement ps = conn.prepareStatement(priceQ);
 				ps.setInt(1, sc.nextInt());
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			break;
@@ -303,7 +300,6 @@ public class DAO {
 				PreparedStatement ps = conn.prepareStatement(infoQ);
 				ps.setString(1, sc.nextLine());
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			break;
