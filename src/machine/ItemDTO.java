@@ -1,7 +1,7 @@
 package machine;
 
 public class ItemDTO {
-	private String productName, Type, Description;
+	private String productName, type, description, info;
 	private int price, stock, idx;
 	public String getProductName() {
 		return productName;
@@ -10,19 +10,25 @@ public class ItemDTO {
 		this.productName = productName;
 	}
 	public String getType() {
-		return Type;
+		return type;
 	}
 	public void setType(String type) {
-		Type = type;
+		this.type = type;
 	}
 	public String getDescription() {
-		return Description;
+		return description;
 	}
 	public void setDescription(String description) {
-		Description = description;
+		this.description = description;
 	}
 	public int getPrice() {
 		return price;
+	}
+	public String getInfo() {
+		return info;
+	}
+	public void setInfo(String info) {
+		this.info = info;
 	}
 	public void setPrice(int price) {
 		this.price = price;
