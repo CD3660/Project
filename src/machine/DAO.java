@@ -57,8 +57,30 @@ public class DAO {
 			default:
 				System.out.println("입력 오류");
 				break;
+
 			}
 		}
+	}
+
+	public String login(String username, String password) {
+		System.out.println("아이디와 비밀번호를 입력해주세요.");
+		String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+		try {
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, sc.nextLine());
+			ps.setString(2, sc.nextLine());
+			ResultSet rs = ps.executeQuery();
+
+			if (rs.next()) {
+				return rs.getString("id");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("다시 입력 해주세요");
+		return null;
+
 	}
 
 	public void userMenu() {
@@ -102,13 +124,13 @@ public class DAO {
 				String temp = sc.nextLine();
 				switch (temp) {
 				case "1":
-//				addItem();
+					addItem();
 					break;
 				case "2":
-//				editItem();
+					editItem();
 					break;
 				case "3":
-//				deleteItem();
+					deleteItem();
 					break;
 				case "4":
 //				resignAccept();
@@ -176,7 +198,7 @@ public class DAO {
 	public void displayItemList() {
 		System.out.println("==========================================================================");
 		for (ItemDTO dto : itemDtos) {
-			System.out.print("상품번호 : " + dto.getIdx() + " 이름 : " + dto.getProductName());
+			System.out.print("상품번호 : " + dto.getIdx() + " 이름 : " + dto.getName());
 			System.out.println("가격 : " + dto.getPrice() + " 종류 : " + dto.getType());
 		}
 		System.out.println("==========================================================================");
@@ -209,7 +231,7 @@ public class DAO {
 	public void displayOrderList() {
 		for (OrderListDTO dto : orderListDtos) {
 			System.out.println("주문번호 : " + dto.getIndex() + " 상품번호 : " + dto.getIndex());
-			System.out.println("가격 : " + rs.getInt("price") + " 종류 : " + rs.getString("type"));
+//			System.out.println("가격 : " + rs.getInt("price") + " 종류 : " + rs.getString("type"));
 		}
 	}
 
@@ -237,7 +259,8 @@ public class DAO {
 	}
 
 	// 상품 정보 수정
-	public void editItemPrice(int itemId, String newName, double newPrice, String newDescription) {
+
+	public void editItem() {
 		int idx = getInt();
 //    	displayItem(idx);
 		int temp = 0;
@@ -269,7 +292,6 @@ public class DAO {
 				PreparedStatement ps = conn.prepareStatement(priceQ);
 				ps.setInt(1, sc.nextInt());
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			break;
@@ -278,7 +300,6 @@ public class DAO {
 				PreparedStatement ps = conn.prepareStatement(infoQ);
 				ps.setString(1, sc.nextLine());
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			break;
@@ -304,9 +325,9 @@ public class DAO {
 				PreparedStatement statement = connection.prepareStatement(
 						"INSERT INTO products (idx, name, price, type, info) VALUES (item_seq.nextval, ?, ?, ?, ?)")) {
 
-			statement.setString(1, dto.getProductName());
+			statement.setString(1, dto.getName());
 			statement.setDouble(2, dto.getPrice());
-			statement.setString(3, dto.getDescription());
+			statement.setString(3, dto.getInfo());
 			statement.setString(4, dto.getType());
 			int temp = statement.executeUpdate();
 			System.out.println("추가 되었습니다");

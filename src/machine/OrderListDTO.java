@@ -1,7 +1,13 @@
 package machine;
 
 public class OrderListDTO {
-	private int index, item, quantity;
+	private int index, item, quantity, price;
+	public int getPrice() {
+		return price;
+	}
+	public void setPrice(int price) {
+		this.price = price;
+	}
 	private String pdate, id;
 	private boolean purchased;
 	
