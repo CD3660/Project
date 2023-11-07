@@ -170,16 +170,17 @@ public class DAO {
 		}
 	}
 
+	//장바구니 메뉴 완료
 	public void cartMenu() {
 		point: while (true) {
 			System.out.println("1. 장바구니 구매 2. 장바구니 삭제 0. 돌아가기");
 			String temp = sc.nextLine();
 			switch (temp) {
 			case "1":
-//				purchaseCart();
+				purchaseCart();
 				break;
 			case "2":
-//				deleteCart();
+				deleteCart();
 				break;
 			case "0":
 				break point;
@@ -190,36 +191,22 @@ public class DAO {
 		}
 
 	}
-	public void deletcart() {
-		System.out.println("삭제 하시겠습니까?");
-		int temp = getInt();
-		try {
-			PreparedStatement ps = conn.prepareStatement("DELETE FROM ORDERLISTDTO WHERE id=? and purchased = 0");
-			ps.setInt(1, temp);
-			System.out.println("1.삭제");
-			System.out.println("2.돌아가기");
-			int choice = ps.executeUpdate();
-			if(choice==1) {
-				int choicex = ps.executeUpdate();
-				if(choicex>0) {
-					System.out.println("삭제 되었습니다");
-				}else {
-					System.out.println("다시 입력 하세요");
-				}if(choicex==2) {
-					System.out.println("돌아가기");
-	            } else {
-	                System.out.println("잘못된 선택입니다.");
-	            }
-			}
-	            }catch (SQLException e) {
-	            e.printStackTrace();
-					
-				}
-			}
 	
-		
-		
-	
+	//장바구니 삭제
+	public void deleteCart() {
+		System.out.println("장바구니를 삭제 하시겠습니까?");
+		System.out.println("1.삭제 아무키.돌아가기");
+		if (sc.nextLine().equals("1")) {
+			try {
+				PreparedStatement ps = conn.prepareStatement("DELETE FROM ORDERLISTDTO WHERE id=? and purchased = 0");
+				ps.setString(1, id);
+				int temp = ps.executeUpdate();
+				System.out.println(temp + " 건 삭제 완료");
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+	}
 
 	// 사용자 정보 출력 완료
 	public void displayUserInfo(String id) {
@@ -251,7 +238,7 @@ public class DAO {
 		System.out.println("==========================================================================");
 	}
 
-	//
+	//상품 리스트 출력
 	public void displayItemList() {
 		System.out.println("==========================================================================");
 		for (ItemDTO dto : itemDtos) {
@@ -263,6 +250,7 @@ public class DAO {
 		System.out.println("===========================================================================");
 	}
 
+	//상품 정보 출력 완료
 	public void displayItemInfo(int idx) {
 		System.out.println("==========================================================================");
 		try {
@@ -294,6 +282,7 @@ public class DAO {
 		System.out.println("==========================================================================");
 	}
 
+	//주문 내역 출력 완료
 	public void displayOrderList() {
 		System.out.println("==========================================================================");
 		for (OrderListDTO dto : orderListDtos) {
@@ -553,6 +542,7 @@ public class DAO {
 
 	}
 
+	// 장바구니 구매
 	public void purchaseCart() {
 		System.out.println("장바구니 내역입니다.");
 		try {
@@ -575,7 +565,7 @@ public class DAO {
 			for (OrderListDTO dto : orderListDtos) {
 				sum += dto.getPrice() * dto.getQuantity();
 			}
-			System.out.println(orderListDtos.size()+" 건의 총 결제 금액 : " + sum);
+			System.out.println(orderListDtos.size() + " 건의 총 결제 금액 : " + sum);
 			System.out.println("==========================================================================");
 			System.out.println("1. 구매 아무키. 돌아가기");
 			if (sc.nextLine().equals("1")) {
