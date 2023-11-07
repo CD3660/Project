@@ -191,7 +191,7 @@ public class DAO {
 		System.out.println("삭제 하시겠습니까?");
 		int temp = getInt();
 		try {
-			PreparedStatement ps = conn.prepareStatement("DELETE FROM  WHERE  id,type,item_id = ?");
+			PreparedStatement ps = conn.prepareStatement("DELETE FROM ORDERLISTDTO WHERE id=? and purchased = 0");
 			ps.setInt(1, temp);
 			System.out.println("1.삭제");
 			System.out.println("2.돌아가기");
@@ -213,6 +213,7 @@ public class DAO {
 					
 				}
 			}
+	
 		
 		
 	
