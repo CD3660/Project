@@ -10,7 +10,8 @@ import java.util.Scanner;
 
 public class DAO {
 	Scanner sc;
-	int userIndex, itemSort;
+	int itemSort;
+	String id;
 	String[] searchLog;// [0] 검색어 [1] 검색 방법 1 = 이름 2= 종류
 	CustomerDTO cDto;
 	ItemDTO iDto;
@@ -18,9 +19,10 @@ public class DAO {
 	ArrayList<OrderListDTO> orderListDtos;
 	Connection conn;
 	// 임시
-	private final String DB_URL = "jdbc:mysql://localhost:3306/database";
-	private final String DB_USER = "username";
-	private final String DB_PASSWORD = "password";
+
+	private final String DB_URL = "jdbc:oracle:thin:@118.40.91.135:1521:xe";
+	private final String DB_USER = "BTEAM";
+	private final String DB_PASSWORD = "BTEAM2";
 	private final String itemSortName = " where name like ?";
 	private final String itemSortType = " where type like ?";
 	private final String[] itemSortStr;
@@ -38,19 +40,20 @@ public class DAO {
 		itemSortStr[6] = " order by price decs";
 	}
 
+	// 메뉴 구조 완료
 	public void loginMenu() {
 		point: while (true) {
 			System.out.println("1.로그인 2.회원가입 0.종료");
 			String temp = sc.nextLine();
 			switch (temp) {
 			case "1":
-//				userIndex = login();
-				if (userIndex != -1) {
+//				id = login();
+//				if (id != null) {
 					userMenu();
-				}
+//				}
 				break;
 			case "2":
-//				createUser();
+				createUser();
 				break;
 			case "0":
 				break point;
@@ -62,10 +65,12 @@ public class DAO {
 		}
 	}
 
-	public String login(String username, String password) {
+	// 병합 완료
+	public String login() {
 		System.out.println("아이디와 비밀번호를 입력해주세요.");
-		String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+		String sql = "SELECT * FROM customerdto WHERE id = ? AND pw = ?";
 		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, sc.nextLine());
 			ps.setString(2, sc.nextLine());
@@ -92,7 +97,7 @@ public class DAO {
 //				editUser();
 				break;
 			case "2":
-//				searchItem();
+				searchItem();
 				break;
 			case "3":
 				managerMenu();
@@ -112,8 +117,25 @@ public class DAO {
 		}
 	}
 
+	// 관리자 확인 완료
 	public boolean isManager() {
-
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			PreparedStatement ps = conn
+					.prepareStatement("select manager from customerdto where id = ? and manager = 1");
+			ps.setString(1, id);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				System.out.println("관리자 계정");
+				return true;
+			} else {
+				System.out.println("관리자가 아닌 아이디 입니다.");
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			closeConn();
+		}
 		return false;
 	}
 
@@ -217,8 +239,15 @@ public class DAO {
 				System.out.println("가격 : " + rs.getInt("price") + " 종류 : " + rs.getString("type"));
 				System.out.println("상품 정보");
 				System.out.println(rs.getString("info"));
+				iDto = new ItemDTO();
+				iDto.setIdx(rs.getInt("idx"));
+				iDto.setName(rs.getString("name"));
+				iDto.setPrice(rs.getInt("price"));
+				iDto.setType(rs.getString("type"));
+				iDto.setInfo(rs.getString("info"));
 			} else {
 				System.out.println("해당하는 상품이 없습니다.");
+				iDto = null;
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -261,11 +290,15 @@ public class DAO {
 	// 상품 정보 수정
 
 	public void editItem() {
+		System.out.println("원하는 상품의 번호를 입력하세요.");
 		int idx = getInt();
-//    	displayItem(idx);
+		displayItemInfo(idx);
+		if(iDto==null) {
+			return;
+		}
 		int temp = 0;
 		while (true) {
-			System.out.println("추가하려는 항목을 고르세요");
+			System.out.println("수정하려는 항목을 고르세요");
 			System.out.println("1. 이름 2. 가격 3. 정보");
 			temp = getInt();
 			if (temp <= 3 && temp >= 1) {
@@ -274,41 +307,42 @@ public class DAO {
 				System.out.println("1부터 3을 입력 하세요");
 			}
 		}
-		String nameQ = "update products set name = ? where idx = ?";
-		String priceQ = "update products set price = ? where idx = ?";
-		String infoQ = "update products set info = ? where idx = ?";
-		switch (temp) {
-		case 1:
-
-			try {
-				PreparedStatement ps = conn.prepareStatement(nameQ);
+		String nameQ = "update itemdto set name = ? where idx = ?";
+		String priceQ = "update itemdto set price = ? where idx = ?";
+		String infoQ = "update itemdto set info = ? where idx = ?";
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			PreparedStatement ps = null;
+			switch (temp) {
+			case 1:
+				ps = conn.prepareStatement(nameQ);
 				ps.setString(1, sc.nextLine());
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			break;
-		case 2:
-			try {
-				PreparedStatement ps = conn.prepareStatement(priceQ);
+				ps.setInt(2, idx);
+				break;
+			case 2:
+				ps = conn.prepareStatement(priceQ);
 				ps.setInt(1, sc.nextInt());
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			break;
-		case 3:
-			try {
-				PreparedStatement ps = conn.prepareStatement(infoQ);
+				ps.setInt(2, idx);
+				break;
+			case 3:
+				ps = conn.prepareStatement(infoQ);
 				ps.setString(1, sc.nextLine());
-			} catch (SQLException e) {
-				e.printStackTrace();
+				ps.setInt(2, idx);
+				break;
 			}
-			break;
-		default:
-			break;
+			if(ps.executeUpdate()==1) {
+				System.out.println("수정 완료");
+			} else {
+				System.out.println("오류 발생 다시 확인하세요");
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			closeConn();
 		}
 	}
 
-	// 상품 추가
+	// 상품 추가 병합 완료
 	public void addItem() {
 		System.out.println("상품을 추가합니다.");
 		ItemDTO dto = new ItemDTO();
@@ -323,27 +357,30 @@ public class DAO {
 
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 				PreparedStatement statement = connection.prepareStatement(
-						"INSERT INTO products (idx, name, price, type, info) VALUES (item_seq.nextval, ?, ?, ?, ?)")) {
-
+						"INSERT INTO itemdto (idx, name, price, type, info) VALUES (item_seq.nextval, ?, ?, ?, ?)")) {
 			statement.setString(1, dto.getName());
 			statement.setDouble(2, dto.getPrice());
-			statement.setString(3, dto.getInfo());
-			statement.setString(4, dto.getType());
+			statement.setString(3, dto.getType());
+			statement.setString(4, dto.getInfo());
 			int temp = statement.executeUpdate();
-			System.out.println("추가 되었습니다");
+			if (temp > 0) {
+				System.out.println("추가 되었습니다");
+			} else {
+				System.out.println("입력 오류입니다.");
+			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 
 	}
 
-	// 상품 삭제
+	// 상품 삭제 병합 완료
 	public void deleteItem() {
 		System.out.println("삭제하려는 상품 번호를 입력 하세요.");
 		int temp = getInt();
-
 		try {
-			PreparedStatement ps = conn.prepareStatement("DELETE FROM itemdto WHERE id=?");
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			PreparedStatement ps = conn.prepareStatement("DELETE FROM itemdto WHERE idx=?");
 			ps.setInt(1, temp);
 			int tempx = ps.executeUpdate();
 			if (tempx == 1) {
@@ -352,7 +389,9 @@ public class DAO {
 				System.out.println("해당하는 상품이 없습니다.");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
+		} finally {
+			closeConn();
 		}
 	}
 
@@ -368,34 +407,35 @@ public class DAO {
 		}
 	}
 
-	// 회원가입
+	// 회원가입 병합 완료
 	public void createUser() {
-		CustomerDTO cDto = new CustomerDTO();
+		cDto = new CustomerDTO();
 		while (true) {
 			System.out.println("회원가입을 위해 " + "아이디, 비밀번호 입력해주세요.");
 			cDto.setId(sc.nextLine());
 			cDto.setPw(sc.nextLine());
 			try {
 				Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-				PreparedStatement ps = connection.prepareStatement("INSERT INTO MEMBER VALUES ( ? , ? )");
+				PreparedStatement ps = connection.prepareStatement("INSERT INTO customerdto (id, pw) VALUES ( ? , ? )");
 				ps.setString(1, cDto.getId());
 				ps.setString(2, cDto.getPw());
 				int result = ps.executeUpdate();
 				if (result == 1) {
 					System.out.println("회원가입이 되셨습니다. 로그인해주세요.");
-					// login();
+					break;
 				} else {
 					System.out.println("입력오류. 다시 진행해주세요.");
 					break;
-
 				}
-			} catch (SQLException e1) {
-				e1.printStackTrace();
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+			} finally {
+				closeConn();
 			}
 		}
 	}
 
-	// 상품 검색
+	// 상품 검색 병합 완료
 	public void searchItem() {
 
 		itemDtos = new ArrayList<>();
@@ -420,13 +460,13 @@ public class DAO {
 		}
 
 		try {
-			Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-			PreparedStatement ps = connection.prepareStatement("temp");
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			PreparedStatement ps = conn.prepareStatement(temp);
 			System.out.println("검색어를 입력하세요.");
-			ps.setString(1, "%"+sc.nextLine()+"%");
+			String str = "%" + sc.nextLine() + "%";
+			ps.setString(1, str);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-
 				ItemDTO dto = new ItemDTO();
 				dto.setIdx(rs.getInt("idx"));
 				dto.setName(rs.getString("name"));
@@ -444,24 +484,16 @@ public class DAO {
 
 		} finally {
 			closeConn();
-
 		}
 		displayItemList();
 
 	}
 
-	
-	
-
 	// 상품 구매
 //public void purchase() {
 //	ItemDTO iDto = new ItemDTO();
 //	int itemOption = sc.nextLine()
-	
-	
-	
-	
-	
+
 	public void purchaseCart() {
 		System.out.println("장바구니 내역입니다.");
 		try {
