@@ -548,7 +548,7 @@ public class DAO {
 					int rs = ps.executeUpdate();
 					if (rs == 1) {
 						conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-						
+
 						ps = conn.prepareStatement(
 								"insert into orderlistdto (idx, item, id, quantity, purchased, pdate) values (order_seq.nextval, ?, ?, ?, 1, sysdate)");
 						ps.setInt(1, iDto.getIdx());
@@ -572,7 +572,7 @@ public class DAO {
 					ps.setInt(1, iDto.getIdx());
 					ps.setString(2, id);
 					ps.setInt(3, quantity);
-					
+
 					ps.executeUpdate();
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -582,9 +582,6 @@ public class DAO {
 			}
 		}
 	}
-	
-	
-	
 
 	public void purchaseCart() {
 		System.out.println("장바구니 내역입니다.");
