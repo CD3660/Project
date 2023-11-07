@@ -108,7 +108,7 @@ public class DAO {
 				cartMenu();
 				break;
 			case "5":
-//				displayPurchased();
+				displayPurchased();
 				break;
 			case "0":
 				break point;
@@ -170,7 +170,7 @@ public class DAO {
 		}
 	}
 
-	//장바구니 메뉴 완료
+	// 장바구니 메뉴 완료
 	public void cartMenu() {
 		point: while (true) {
 			System.out.println("1. 장바구니 구매 2. 장바구니 삭제 0. 돌아가기");
@@ -191,8 +191,8 @@ public class DAO {
 		}
 
 	}
-	
-	//장바구니 삭제
+
+	// 장바구니 삭제 완료
 	public void deleteCart() {
 		System.out.println("장바구니를 삭제 하시겠습니까?");
 		System.out.println("1.삭제 아무키.돌아가기");
@@ -204,6 +204,8 @@ public class DAO {
 				System.out.println(temp + " 건 삭제 완료");
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
+			} finally {
+				closeConn();
 			}
 		}
 	}
@@ -238,7 +240,7 @@ public class DAO {
 		System.out.println("==========================================================================");
 	}
 
-	//상품 리스트 출력
+	// 상품 리스트 출력
 	public void displayItemList() {
 		System.out.println("==========================================================================");
 		for (ItemDTO dto : itemDtos) {
@@ -250,7 +252,7 @@ public class DAO {
 		System.out.println("===========================================================================");
 	}
 
-	//상품 정보 출력 완료
+	// 상품 정보 출력 완료
 	public void displayItemInfo(int idx) {
 		System.out.println("==========================================================================");
 		try {
@@ -282,11 +284,10 @@ public class DAO {
 		System.out.println("==========================================================================");
 	}
 
-	//주문 내역 출력 완료
+	// 주문 내역 출력 완료
 	public void displayOrderList() {
 		System.out.println("==========================================================================");
 		for (OrderListDTO dto : orderListDtos) {
-			System.out.println("--------------------------------------------------------------------------");
 			System.out.println("주문번호 : " + dto.getIndex() + " 상품번호 : " + dto.getItem());
 			System.out.println("가격 : " + dto.getPrice() + " 수량 : " + dto.getQuantity());
 			if (dto.isPurchased()) {
@@ -297,6 +298,31 @@ public class DAO {
 		System.out.println("==========================================================================");
 	}
 
+	public void displayPurchased() {
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			PreparedStatement ps = conn.prepareStatement(
+					"select idx, item, price, quantity from orderlistdto where id = ? and purchased = 1");
+			ps.setString(1, id);
+			ResultSet rs = ps.executeQuery();
+			orderListDtos = new ArrayList<>();
+			while (rs.next()) {
+				OrderListDTO dto = new OrderListDTO();
+				dto.setIndex(rs.getInt("idx"));
+				dto.setItem(rs.getInt("item"));
+				dto.setId(id);
+				dto.setPrice(rs.getInt("price"));
+				dto.setQuantity(rs.getInt("quantity"));
+				orderListDtos.add(dto);
+			}
+			displayOrderList();
+		} catch (SQLException e) {
+			System.out.println("포인트가 부족합니다.");
+		} finally {
+			closeConn();
+		}
+	}
+	
 	// 숫자만 입력 받기
 	public int getInt() {
 		while (true) {
@@ -477,50 +503,95 @@ public class DAO {
 	// 상품 검색 병합 완료
 	public void searchItem() {
 		itemDtos = new ArrayList<>();
-		System.out.println("상품 검색을 선택하셨습니다. 1.이름으로 검색  2.상품 종류로 검색");
-		String option;
-		while (true) {
-			option = sc.nextLine();
-			if (option.equals("1") || option.equals("2")) {
-				break;
-			} else {
-				System.out.println("잘못된 입력");
-			}
-		}
-		String temp = "select idx, name, price, type, info from itemdto";
-		if (option.equals("1")) {
-			temp += itemSortName;
-			temp += itemSortStr[1];
-		} else {
-			temp += itemSortType;
-			temp += itemSortStr[3];
-		}
-		try {
-			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-			PreparedStatement ps = conn.prepareStatement(temp);
-			System.out.println("검색어를 입력하세요.");
-			String str = "%" + sc.nextLine() + "%";
-			ps.setString(1, str);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				ItemDTO dto = new ItemDTO();
-				dto.setIdx(rs.getInt("idx"));
-				dto.setName(rs.getString("name"));
-				dto.setPrice(rs.getInt("price"));
-				dto.setType(rs.getString("type"));
-				if (rs.getString("info") == null) {
-					dto.setInfo("");
-				} else {
-					dto.setInfo(rs.getString("info"));
+		point:while (true) {
+			System.out.println("상품 검색");
+			System.out.println("1.이름으로 검색  2.상품 종류로 검색 3.정렬방법변경 4.상품구매 0.돌아가기");
+			String key = sc.nextLine();
+			switch (key) {
+			case "1":
+				String temp = "select idx, name, price, type, info from itemdto";
+				temp += itemSortName;
+				temp += itemSortStr[1];
+				try {
+					conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+					PreparedStatement ps = conn.prepareStatement(temp);
+					System.out.println("검색어를 입력하세요.");
+					String str = "%" + sc.nextLine() + "%";
+					ps.setString(1, str);
+					ResultSet rs = ps.executeQuery();
+					while (rs.next()) {
+						ItemDTO dto = new ItemDTO();
+						dto.setIdx(rs.getInt("idx"));
+						dto.setName(rs.getString("name"));
+						dto.setPrice(rs.getInt("price"));
+						dto.setType(rs.getString("type"));
+						if (rs.getString("info") == null) {
+							dto.setInfo("");
+						} else {
+							dto.setInfo(rs.getString("info"));
+						}
+						itemDtos.add(dto);
+					}
+				} catch (SQLException e) {
+					System.out.println(e.getMessage());
+				} finally {
+					closeConn();
 				}
-				itemDtos.add(dto);
+				displayItemList();
+				break point;
+			case "2":
+				temp = "select idx, name, price, type, info from itemdto";
+				temp += itemSortType;
+				temp += itemSortStr[3];
+				try {
+					conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+					PreparedStatement ps = conn.prepareStatement(temp);
+					System.out.println("검색어를 입력하세요.");
+					String str = "%" + sc.nextLine() + "%";
+					ps.setString(1, str);
+					ResultSet rs = ps.executeQuery();
+					while (rs.next()) {
+						ItemDTO dto = new ItemDTO();
+						dto.setIdx(rs.getInt("idx"));
+						dto.setName(rs.getString("name"));
+						dto.setPrice(rs.getInt("price"));
+						dto.setType(rs.getString("type"));
+						if (rs.getString("info") == null) {
+							dto.setInfo("");
+						} else {
+							dto.setInfo(rs.getString("info"));
+						}
+						itemDtos.add(dto);
+					}
+				} catch (SQLException e) {
+					System.out.println(e.getMessage());
+				} finally {
+					closeConn();
+				}
+				displayItemList();
+				break point;
+			case "3":
+				System.out.println("정렬방법을 선택하세요");
+				System.out.println("1.상품번호오름차순 2.상품번호내림차순 3.이름오름차순 4.이름내림차순 5.가격오름차순 6. 가격내림차순");
+				while (true) {
+					int a = getInt();
+					if (a >= 1 && a <= 6) {
+						itemSort = a;
+						System.out.println("정렬방법 설정 완료");
+						break;
+					} else {
+						System.out.println("잘못된 입력");
+					}
+				}
+				break point;
+			case "4":
+				purchase();
+				break point;
+			default:
+				System.out.println("입력 오류");
+				break;
 			}
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			closeConn();
 		}
-		displayItemList();
 
 	}
 
@@ -530,65 +601,80 @@ public class DAO {
 		displayItemInfo(getInt());
 		System.out.println("구매하실 수량을 선택해주세요.");
 		int quantity = getInt();
-
 		System.out.println(iDto.getName() + "을(를)" + " " + quantity + "개 선택하셨습니다.");
 
 		while (true) {
-			System.out.println("1.즉시 구매  2.장바구니 담기");
+			System.out.println("1.즉시 구매  2.장바구니 담기 0.돌아가기");
 			String choose = sc.nextLine();
 			if (choose.equals("1")) {
-				System.out.println("즉시구매를 진행합니다");
-
-				PreparedStatement ps;
-				try {
-					ps = conn.prepareStatement("update customerdto set point = point - ? where id = ?");
-
-					ps.setInt(1, iDto.getPrice() * quantity);
-					ps.setString(2, id);
-					int rs = ps.executeUpdate();
-					if (rs == 1) {
-						conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-
-						ps = conn.prepareStatement(
-								"insert into orderlistdto (idx, item, id, quantity, purchased, pdate) values (order_seq.nextval, ?, ?, ?, 1, sysdate)");
-						ps.setInt(1, iDto.getIdx());
-						ps.setString(2, id);
-						ps.setInt(3, quantity);
-						ps.executeUpdate();
-						System.out.println("구매완료");
-					} else {
-						System.out.println("구매 실패");
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-
+				purchaseNow(quantity);
 			} else if (choose.equals("2")) {
-				System.out.println("장바구니에 담았습니다");
-				try {
-					conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-					PreparedStatement ps = conn.prepareStatement(
-							"insert into orderlistdto (idx, item, id, quantity, purchased) values (order_seq.nextval, ?, ?, ?, 0)");
-					ps.setInt(1, iDto.getIdx());
-					ps.setString(2, id);
-					ps.setInt(3, quantity);
-
-					ps.executeUpdate();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			} else {
+				addCart(quantity);
+			} else if (choose.equals("0")) {
+				break;
+			}else {
 				System.out.println("다시 입력하세요");
 			}
 		}
 	}
 
+	// 즉시 구매 병합 완료
+	public void purchaseNow(int quantity) {
+		System.out.println("구매를 진행합니다");
+		PreparedStatement ps;
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			ps = conn.prepareStatement("update customerdto set point = point - ? where id = ?");
+			ps.setInt(1, iDto.getPrice() * quantity);
+			ps.setString(2, id);
+			int rs = ps.executeUpdate();
+			if (rs == 1) {
+				conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+
+				ps = conn.prepareStatement(
+						"insert into orderlistdto (idx, item, id, quantity, purchased, pdate, price) values (order_seq.nextval, ?, ?, ?, 1, sysdate, ?)");
+				ps.setInt(1, iDto.getIdx());
+				ps.setString(2, id);
+				ps.setInt(3, quantity);
+				ps.setInt(4, iDto.getPrice());
+				ps.executeUpdate();
+				System.out.println("구매완료");
+			} else {
+				System.out.println("구매 실패");
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			closeConn();
+		}
+	}
+
+	// 장바구니 추가 병합 완료
+	public void addCart(int quantity) {
+		System.out.println("장바구니에 담았습니다");
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			PreparedStatement ps = conn.prepareStatement(
+					"insert into orderlistdto (idx, item, id, quantity, purchased, price) values (order_seq.nextval, ?, ?, ?, 0, ?)");
+			ps.setInt(1, iDto.getIdx());
+			ps.setString(2, id);
+			ps.setInt(3, quantity);
+			ps.setInt(4, iDto.getPrice());
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			closeConn();
+		}
+	}
+
+	// 장바구니 구매 완료
 	public void purchaseCart() {
 		System.out.println("장바구니 내역입니다.");
 		try {
 			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			PreparedStatement ps = conn.prepareStatement(
-					"select idx, item, price, quantity from orderlistdto, itemdto where id = ? and purchased = 0");
+					"select idx, item, price, quantity from orderlistdto where id = ? and purchased = 0");
 			ps.setString(1, id);
 			ResultSet rs = ps.executeQuery();
 			orderListDtos = new ArrayList<>();
@@ -597,6 +683,7 @@ public class DAO {
 				dto.setIndex(rs.getInt("idx"));
 				dto.setItem(rs.getInt("item"));
 				dto.setId(id);
+				dto.setPrice(rs.getInt("price"));
 				dto.setQuantity(rs.getInt("quantity"));
 				orderListDtos.add(dto);
 			}
@@ -608,21 +695,17 @@ public class DAO {
 			System.out.println(orderListDtos.size() + " 건의 총 결제 금액 : " + sum);
 			System.out.println("==========================================================================");
 			System.out.println("1. 구매 아무키. 돌아가기");
-			if (sc.nextLine().equals("1")) {
-				ps = conn.prepareStatement("select point from customerdto where id = ?");
-				ps.setString(1, id);
-				rs = ps.executeQuery();
-				rs.next();
-				int point = rs.getInt("point");
-				ps = conn.prepareStatement("update customerdto set point = ? where id = ?");
-				ps.setInt(1, point - sum);
+			String temp = sc.nextLine();
+			if (temp.equals("1")) {
+				ps = conn.prepareStatement("update customerdto set point = point - ? where id = ?");
+				ps.setInt(1, sum);
 				ps.setString(2, id);
 				if (ps.executeUpdate() == 1) {
 					for (OrderListDTO dto : orderListDtos) {
 						ps = conn.prepareStatement(
 								"update orderlistdto set purchased = 1, pdate = sysdate where idx = ?");
 						ps.setInt(1, dto.getIndex());
-						ps.executeUpdate();
+						ps.execute();
 					}
 					System.out.println("구매 완료");
 				} else {
@@ -630,7 +713,7 @@ public class DAO {
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println("포인트가 부족합니다.");
 		} finally {
 			closeConn();
 		}
