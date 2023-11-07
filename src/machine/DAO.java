@@ -167,6 +167,35 @@ public class DAO {
 		}
 
 	}
+	public void deletcart() {
+		System.out.println("삭제 하시겠습니까?");
+		int temp = getInt();
+		try {
+			PreparedStatement ps = conn.prepareStatement("DELETE FROM  WHERE  id,type,item_id = ?");
+			ps.setInt(1, temp);
+			System.out.println("1.삭제");
+			System.out.println("2.돌아가기");
+			int choice = ps.executeUpdate();
+			if(choice==1) {
+				int choicex = ps.executeUpdate();
+				if(choicex>0) {
+					System.out.println("삭제 되었습니다");
+				}else {
+					System.out.println("다시 입력 하세요");
+				}if(choicex==2) {
+					System.out.println("돌아가기");
+	            } else {
+	                System.out.println("잘못된 선택입니다.");
+	            }
+			}
+	            }catch (SQLException e) {
+	            e.printStackTrace();
+					
+				}
+			}
+		
+		
+	
 
 	public void displayUserInfo(String id) {
 		try {
