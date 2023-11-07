@@ -1,5 +1,7 @@
 package machine;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,6 +9,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class DAO {
 	Scanner sc;
@@ -322,7 +337,7 @@ public class DAO {
 			closeConn();
 		}
 	}
-	
+
 	// 숫자만 입력 받기
 	public int getInt() {
 		while (true) {
@@ -503,7 +518,7 @@ public class DAO {
 	// 상품 검색 병합 완료
 	public void searchItem() {
 		itemDtos = new ArrayList<>();
-		point:while (true) {
+		point: while (true) {
 			System.out.println("상품 검색");
 			System.out.println("1.이름으로 검색  2.상품 종류로 검색 3.정렬방법변경 4.상품구매 0.돌아가기");
 			String key = sc.nextLine();
@@ -612,7 +627,7 @@ public class DAO {
 				addCart(quantity);
 			} else if (choose.equals("0")) {
 				break;
-			}else {
+			} else {
 				System.out.println("다시 입력하세요");
 			}
 		}
@@ -778,23 +793,38 @@ public class DAO {
 
 	// 주소 수정 병합 완료
 	public void editUserAddress() {
-		System.out.println("변경할 주소를 입력해주세요");
-		String str1 = sc.nextLine();
-		try {
-			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-			PreparedStatement ps = conn.prepareStatement("update CustomerDTO set address= ? where id = ?");
-			ps.setString(1, str1);
-			ps.setString(2, id);
-			if (ps.executeUpdate() == 1) {
-				System.out.println("주소 변경 완료");
-			} else {
-				System.out.println("입력 오류입니다.");
+		while (true) {
+			System.out.println("1.주소검색 2.주소변경 0.돌아가기");
+			String temp = sc.nextLine();
+			if (temp.equals("1")) {
+				jusoAPI();
 			}
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			closeConn();
+			if (temp.equals("2")) {
+				System.out.println("변경하려는 주소를 입력하세요.");
+				String str1 = sc.nextLine();
+				try {
+					conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+					PreparedStatement ps = conn.prepareStatement("update CustomerDTO set address= ? where id = ?");
+					ps.setString(1, str1);
+					ps.setString(2, id);
+					if (ps.executeUpdate() == 1) {
+						System.out.println("주소 변경 완료");
+					} else {
+						System.out.println("입력 오류입니다.");
+					}
+				} catch (SQLException e) {
+					System.out.println(e.getMessage());
+				} finally {
+					closeConn();
+				}
+			}
+			if (temp.equals("0")) {
+				break;
+			} else {
+				System.out.println("입력 오류");
+			}
 		}
+		
 
 	}
 
@@ -890,6 +920,44 @@ public class DAO {
 				System.out.println(e.getMessage());
 			} finally {
 				closeConn();
+			}
+		}
+	}
+
+	//주소 api를 활용한 주소지 검색
+	public void jusoAPI() {
+		HttpClient client = HttpClients.createDefault();
+		while (true) {
+			try {
+				System.out.println("주소를 검색하세요. 0.돌아가기");
+				String search = sc.nextLine();
+				if (search.equals("0")) {
+					break;
+				}
+				URIBuilder builder = new URIBuilder("https://business.juso.go.kr/addrlink/addrLinkApiJsonp.do");
+				builder.addParameter("curruntPage", "1");
+				builder.addParameter("countPerPage", "30");
+				builder.addParameter("keyword", search);
+				builder.addParameter("confmKey", "devU01TX0FVVEgyMDIzMTEwNzE2MTE1MTExNDI0OTI=");
+				builder.addParameter("resultType", "json");
+				HttpGet request = new HttpGet(builder.build());
+
+				HttpResponse response = client.execute(request);
+				String responseBody = EntityUtils.toString(response.getEntity());
+				responseBody = responseBody.substring(1, responseBody.length() - 1);
+				JsonElement jElement = JsonParser.parseString(responseBody);
+				JsonObject jobj = jElement.getAsJsonObject().getAsJsonObject("results");
+				JsonArray juso = (JsonArray) jobj.get("juso");
+				for (int i = 0; i < juso.size(); i++) {
+					JsonObject tempObj = juso.get(i).getAsJsonObject();
+					System.out.println((i + 1) + ". " + tempObj.get("roadAddr") + " " + tempObj.get("zipNo"));
+				}
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}
