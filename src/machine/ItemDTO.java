@@ -19,6 +19,12 @@ public class ItemDTO {
 	public int getPrice() {
 		return price;
 	}
+	public String getInfo() {
+		return info;
+	}
+	public void setInfo(String info) {
+		this.info = info;
+	}
 	public void setPrice(int price) {
 		this.price = price;
 	}

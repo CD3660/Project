@@ -49,7 +49,7 @@ public class DAO {
 			case "1":
 //				id = login();
 //				if (id != null) {
-					userMenu();
+				userMenu();
 //				}
 				break;
 			case "2":
@@ -293,7 +293,7 @@ public class DAO {
 		System.out.println("원하는 상품의 번호를 입력하세요.");
 		int idx = getInt();
 		displayItemInfo(idx);
-		if(iDto==null) {
+		if (iDto == null) {
 			return;
 		}
 		int temp = 0;
@@ -330,7 +330,7 @@ public class DAO {
 				ps.setInt(2, idx);
 				break;
 			}
-			if(ps.executeUpdate()==1) {
+			if (ps.executeUpdate() == 1) {
 				System.out.println("수정 완료");
 			} else {
 				System.out.println("오류 발생 다시 확인하세요");
@@ -492,22 +492,65 @@ public class DAO {
 	// 상품 구매
 	public void purchase() {
 		System.out.println("원하시는 상품번호를 선택하세요.");
-		try {
-			int chooseNumber = Integer.parseInt(sc.nextLine());
-			if (chooseNumber < itemDtos.size()) {
-				System.out.println("구매하실 수량을 선택해주세요.");
-			}else {
-					System.out.println("1.즉시 구매  2.장바구니 담기");
+		displayItemInfo(getInt());
+		System.out.println("구매하실 수량을 선택해주세요.");
+		int quantity = getInt();
+
+		System.out.println(iDto.getName() + "을(를)" + " " + quantity + "개 선택하셨습니다.");
+
+		while (true) {
+			System.out.println("1.즉시 구매  2.장바구니 담기");
+			String choose = sc.nextLine();
+			if (choose.equals("1")) {
+				System.out.println("즉시구매를 진행합니다");
+
+				PreparedStatement ps;
+				try {
+					ps = conn.prepareStatement("update customerdto set point = point - ? where id = ?");
+
+					ps.setInt(1, iDto.getPrice() * quantity);
+					ps.setString(2, id);
+					int rs = ps.executeUpdate();
+					if (rs == 1) {
+						conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+						
+						ps = conn.prepareStatement(
+								"insert into orderlistdto (idx, item, id, quantity, purchased, pdate) values (order_seq.nextval, ?, ?, ?, 1, sysdate)");
+						ps.setInt(1, iDto.getIdx());
+						ps.setString(2, id);
+						ps.setInt(3, quantity);
+						ps.executeUpdate();
+						System.out.println("구매완료");
+					} else {
+						System.out.println("구매 실패");
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+
+			} else if (choose.equals("2")) {
+				System.out.println("장바구니에 담았습니다");
+				try {
+					conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+					PreparedStatement ps = conn.prepareStatement(
+							"insert into orderlistdto (idx, item, id, quantity, purchased) values (order_seq.nextval, ?, ?, ?, 0)");
+					ps.setInt(1, iDto.getIdx());
+					ps.setString(2, id);
+					ps.setInt(3, quantity);
+					
+					ps.executeUpdate();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			} else {
+				System.out.println("다시 입력하세요");
 			}
-		} catch (Exception e) {
-			System.out.println("숫자를 입력하세요");
 		}
-		
 	}
 	
 	
 	
-	
+
 	public void purchaseCart() {
 		System.out.println("장바구니 내역입니다.");
 		try {
