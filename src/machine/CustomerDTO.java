@@ -1,8 +1,8 @@
 package machine;
 
 public class CustomerDTO {
-	private String id, pw, address, email;
-	private int point, grade, phone; 
+	private String id, pw, address, email, phone;
+	private int point, grade; 
 	private boolean manager, resign;
 	public boolean isResign() {
 		return resign;
@@ -46,10 +46,10 @@ public class CustomerDTO {
 	public void setManager(boolean manager) {
 		this.manager = manager;
 	}
-	public int getPhone() {
+	public String getPhone() {
 		return phone;
 	}
-	public void setPhone(int phone) {
+	public void setPhone(String phone) {
 		this.phone = phone;
 	}
 	public int getGrade() {
