@@ -223,7 +223,7 @@ public class DAO {
 			System.out.print("상품번호 : " + dto.getIdx() + " 이름 : " + dto.getName());
 			System.out.println("가격 : " + dto.getPrice() + " 종류 : " + dto.getType());
 		}
-		System.out.println("==========================================================================");
+		System.out.println("========== ================================================================");
 	}
 
 	public void displayItemInfo(int idx) {
@@ -490,10 +490,24 @@ public class DAO {
 	}
 
 	// 상품 구매
-//public void purchase() {
-//	ItemDTO iDto = new ItemDTO();
-//	int itemOption = sc.nextLine()
-
+	public void purchase() {
+		System.out.println("원하시는 상품번호를 선택하세요.");
+		try {
+			int chooseNumber = Integer.parseInt(sc.nextLine());
+			if (chooseNumber < itemDtos.size()) {
+				System.out.println("구매하실 수량을 선택해주세요.");
+			}else {
+					System.out.println("1.즉시 구매  2.장바구니 담기");
+			}
+		} catch (Exception e) {
+			System.out.println("숫자를 입력하세요");
+		}
+		
+	}
+	
+	
+	
+	
 	public void purchaseCart() {
 		System.out.println("장바구니 내역입니다.");
 		try {
