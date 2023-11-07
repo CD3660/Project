@@ -4,6 +4,12 @@ public class ItemDTO {
 	private String name, type, info;
 	private int price, stock, idx;
 	
+	public String getInfo() {
+		return info;
+	}
+	public void setInfo(String info) {
+		this.info = info;
+	}
 	public String getName() {
 		return name;
 	}

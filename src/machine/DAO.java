@@ -47,10 +47,10 @@ public class DAO {
 			String temp = sc.nextLine();
 			switch (temp) {
 			case "1":
-//				id = login();
-//				if (id != null) {
-				userMenu();
-//				}
+				id = login();
+				if (id != null) {
+					userMenu();
+				}
 				break;
 			case "2":
 				createUser();
@@ -81,6 +81,8 @@ public class DAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			closeConn();
 		}
 
 		System.out.println("다시 입력 해주세요");
@@ -94,7 +96,7 @@ public class DAO {
 			String temp = sc.nextLine();
 			switch (temp) {
 			case "1":
-//				editUser();
+				editUser();
 				break;
 			case "2":
 				searchItem();
@@ -139,6 +141,7 @@ public class DAO {
 		return false;
 	}
 
+	// 관리자 메뉴 완료
 	public void managerMenu() {
 		if (isManager()) {
 			point: while (true) {
@@ -155,7 +158,7 @@ public class DAO {
 					deleteItem();
 					break;
 				case "4":
-//				resignAccept();
+					resignAccept();
 					break;
 				case "0":
 					break point;
@@ -187,7 +190,38 @@ public class DAO {
 		}
 
 	}
+	public void deletcart() {
+		System.out.println("삭제 하시겠습니까?");
+		int temp = getInt();
+		try {
+			PreparedStatement ps = conn.prepareStatement("DELETE FROM ORDERLISTDTO WHERE id=? and purchased = 0");
+			ps.setInt(1, temp);
+			System.out.println("1.삭제");
+			System.out.println("2.돌아가기");
+			int choice = ps.executeUpdate();
+			if(choice==1) {
+				int choicex = ps.executeUpdate();
+				if(choicex>0) {
+					System.out.println("삭제 되었습니다");
+				}else {
+					System.out.println("다시 입력 하세요");
+				}if(choicex==2) {
+					System.out.println("돌아가기");
+	            } else {
+	                System.out.println("잘못된 선택입니다.");
+	            }
+			}
+	            }catch (SQLException e) {
+	            e.printStackTrace();
+					
+				}
+			}
+	
+		
+		
+	
 
+	// 사용자 정보 출력 완료
 	public void displayUserInfo(String id) {
 		System.out.println("==========================================================================");
 		try {
@@ -198,7 +232,7 @@ public class DAO {
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				System.out.println("주소 : " + rs.getString("address"));
-				System.out.println("전화번호 : " + rs.getInt("phone"));
+				System.out.println("전화번호 : " + rs.getString("phone"));
 				System.out.println("이메일 : " + rs.getString("email"));
 				System.out.println("잔여 포인트 : " + rs.getString("point"));
 				if (rs.getInt("manager") == 1) {
@@ -217,13 +251,16 @@ public class DAO {
 		System.out.println("==========================================================================");
 	}
 
+	//
 	public void displayItemList() {
 		System.out.println("==========================================================================");
 		for (ItemDTO dto : itemDtos) {
+			System.out.println("--------------------------------------------------------------------------");
 			System.out.print("상품번호 : " + dto.getIdx() + " 이름 : " + dto.getName());
 			System.out.println("가격 : " + dto.getPrice() + " 종류 : " + dto.getType());
+			System.out.println("--------------------------------------------------------------------------");
 		}
-		System.out.println("========== ================================================================");
+		System.out.println("===========================================================================");
 	}
 
 	public void displayItemInfo(int idx) {
@@ -258,12 +295,20 @@ public class DAO {
 	}
 
 	public void displayOrderList() {
+		System.out.println("==========================================================================");
 		for (OrderListDTO dto : orderListDtos) {
-			System.out.println("주문번호 : " + dto.getIndex() + " 상품번호 : " + dto.getIndex());
-//			System.out.println("가격 : " + rs.getInt("price") + " 종류 : " + rs.getString("type"));
+			System.out.println("--------------------------------------------------------------------------");
+			System.out.println("주문번호 : " + dto.getIndex() + " 상품번호 : " + dto.getItem());
+			System.out.println("가격 : " + dto.getPrice() + " 수량 : " + dto.getQuantity());
+			if (dto.isPurchased()) {
+				System.out.println("구매 일자 : " + dto.getDate());
+			}
+			System.out.println("--------------------------------------------------------------------------");
 		}
+		System.out.println("==========================================================================");
 	}
 
+	// 숫자만 입력 받기
 	public int getInt() {
 		while (true) {
 			try {
@@ -275,6 +320,7 @@ public class DAO {
 		}
 	}
 
+	// 연결 종료 병합 완료
 	public void closeConn() {
 		try {
 			if (!conn.isClosed()) {
@@ -287,8 +333,7 @@ public class DAO {
 		}
 	}
 
-	// 상품 정보 수정
-
+	// 상품 정보 수정 병합 완료
 	public void editItem() {
 		System.out.println("원하는 상품의 번호를 입력하세요.");
 		int idx = getInt();
@@ -355,14 +400,15 @@ public class DAO {
 		System.out.println("정보를 입력하세요.");
 		dto.setInfo(sc.nextLine());
 
-		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-				PreparedStatement statement = connection.prepareStatement(
-						"INSERT INTO itemdto (idx, name, price, type, info) VALUES (item_seq.nextval, ?, ?, ?, ?)")) {
-			statement.setString(1, dto.getName());
-			statement.setDouble(2, dto.getPrice());
-			statement.setString(3, dto.getType());
-			statement.setString(4, dto.getInfo());
-			int temp = statement.executeUpdate();
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			PreparedStatement ps = conn.prepareStatement(
+					"INSERT INTO itemdto (idx, name, price, type, info) VALUES (item_seq.nextval, ?, ?, ?, ?)");
+			ps.setString(1, dto.getName());
+			ps.setDouble(2, dto.getPrice());
+			ps.setString(3, dto.getType());
+			ps.setString(4, dto.getInfo());
+			int temp = ps.executeUpdate();
 			if (temp > 0) {
 				System.out.println("추가 되었습니다");
 			} else {
@@ -370,6 +416,8 @@ public class DAO {
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
+		} finally {
+			closeConn();
 		}
 
 	}
@@ -395,15 +443,17 @@ public class DAO {
 		}
 	}
 
-	// 회원 탈퇴 수락
-	public void resignAccept(int userId) {
-		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-				PreparedStatement statement = connection.prepareStatement("DELETE FROM users WHERE resign=1")) {
-
-			int result = statement.executeUpdate();
+	// 회원 탈퇴 수락 병합 완료
+	public void resignAccept() {
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			PreparedStatement ps = conn.prepareStatement("DELETE FROM customerdto WHERE resign=1");
+			int result = ps.executeUpdate();
 			System.out.println(result + " 명 회원 탈퇴 수락 완료.");
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			closeConn();
 		}
 	}
 
@@ -415,8 +465,8 @@ public class DAO {
 			cDto.setId(sc.nextLine());
 			cDto.setPw(sc.nextLine());
 			try {
-				Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-				PreparedStatement ps = connection.prepareStatement("INSERT INTO customerdto (id, pw) VALUES ( ? , ? )");
+				conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+				PreparedStatement ps = conn.prepareStatement("INSERT INTO customerdto (id, pw) VALUES ( ? , ? )");
 				ps.setString(1, cDto.getId());
 				ps.setString(2, cDto.getPw());
 				int result = ps.executeUpdate();
@@ -437,9 +487,7 @@ public class DAO {
 
 	// 상품 검색 병합 완료
 	public void searchItem() {
-
 		itemDtos = new ArrayList<>();
-
 		System.out.println("상품 검색을 선택하셨습니다. 1.이름으로 검색  2.상품 종류로 검색");
 		String option;
 		while (true) {
@@ -458,7 +506,6 @@ public class DAO {
 			temp += itemSortType;
 			temp += itemSortStr[3];
 		}
-
 		try {
 			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			PreparedStatement ps = conn.prepareStatement(temp);
@@ -480,8 +527,7 @@ public class DAO {
 				itemDtos.add(dto);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-
+			System.out.println(e.getMessage());
 		} finally {
 			closeConn();
 		}
@@ -554,20 +600,226 @@ public class DAO {
 			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			PreparedStatement ps = conn.prepareStatement(
 					"select idx, item, price, quantity from orderlistdto, itemdto where id = ? and purchased = 0");
-			ps.setString(1, cDto.getId());
+			ps.setString(1, id);
 			ResultSet rs = ps.executeQuery();
 			orderListDtos = new ArrayList<>();
 			while (rs.next()) {
 				OrderListDTO dto = new OrderListDTO();
 				dto.setIndex(rs.getInt("idx"));
 				dto.setItem(rs.getInt("item"));
-				dto.setId(cDto.getId());
+				dto.setId(id);
 				dto.setQuantity(rs.getInt("quantity"));
 				orderListDtos.add(dto);
 			}
 			displayOrderList();
+			int sum = 0;
+			for (OrderListDTO dto : orderListDtos) {
+				sum += dto.getPrice() * dto.getQuantity();
+			}
+			System.out.println(orderListDtos.size()+" 건의 총 결제 금액 : " + sum);
+			System.out.println("==========================================================================");
+			System.out.println("1. 구매 아무키. 돌아가기");
+			if (sc.nextLine().equals("1")) {
+				ps = conn.prepareStatement("select point from customerdto where id = ?");
+				ps.setString(1, id);
+				rs = ps.executeQuery();
+				rs.next();
+				int point = rs.getInt("point");
+				ps = conn.prepareStatement("update customerdto set point = ? where id = ?");
+				ps.setInt(1, point - sum);
+				ps.setString(2, id);
+				if (ps.executeUpdate() == 1) {
+					for (OrderListDTO dto : orderListDtos) {
+						ps = conn.prepareStatement(
+								"update orderlistdto set purchased = 1, pdate = sysdate where idx = ?");
+						ps.setInt(1, dto.getIndex());
+						ps.executeUpdate();
+					}
+					System.out.println("구매 완료");
+				} else {
+					System.out.println("포인트가 부족합니다.");
+				}
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			closeConn();
 		}
 	}
+
+	// 회원 정보 수정 병합 완료
+	private void editUser() {
+		point: while (true) {
+			displayUserInfo(id);
+			System.out.println("회원 정보 메뉴입니다.");
+			System.out.println("1.비밀번호수정 2.주소수정 3.전화번호수정 4.이메일수정 5.포인트충전 6.회원탈퇴 신청 0.돌아가기");
+			int key = getInt();
+			switch (key) {
+			case 1:
+				editUserPw();
+				break;
+			case 2:
+				editUserAddress();
+				break;
+			case 3:
+				editUserPhone();
+				break;
+			case 4:
+				editUserEmail();
+				break;
+			case 5:
+				editUserPoint();
+				break;
+			case 6:
+				editUserResign();
+				break;
+			case 0:
+				break point;
+			default:
+				System.out.println("입력 범위 초과");
+				break;
+			}
+		}
+	}
+
+	// 비밀번호 수정 병합 완료
+	public void editUserPw() {
+		System.out.println("변경할 비밀번호를 입력해주세요.");
+		String str1 = sc.nextLine();
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			PreparedStatement ps = conn.prepareStatement("update CustomerDTO set pw= ? where id = ?");
+			ps.setString(1, str1);
+			ps.setString(2, id);
+			if (ps.executeUpdate() == 1) {
+				System.out.println("비밀번호 변경 완료");
+			} else {
+				System.out.println("입력 오류입니다. 8~16byte의 크기로 입력하세요.");
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			closeConn();
+		}
+
+	}
+
+	// 주소 수정 병합 완료
+	public void editUserAddress() {
+		System.out.println("변경할 주소를 입력해주세요");
+		String str1 = sc.nextLine();
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			PreparedStatement ps = conn.prepareStatement("update CustomerDTO set address= ? where id = ?");
+			ps.setString(1, str1);
+			ps.setString(2, id);
+			if (ps.executeUpdate() == 1) {
+				System.out.println("주소 변경 완료");
+			} else {
+				System.out.println("입력 오류입니다.");
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			closeConn();
+		}
+
+	}
+
+	// 전화번호 수정 병합 완료
+	public void editUserPhone() {
+		System.out.println("변경할 번호를 입력해주세요.");
+		String str1 = sc.nextLine();
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			PreparedStatement ps = conn.prepareStatement("update CustomerDTO set phone= ? where id = ?");
+			ps.setString(1, str1);
+			ps.setString(2, id);
+			if (ps.executeUpdate() == 1) {
+				System.out.println("전화번호 변경 완료");
+			} else {
+				System.out.println("입력 오류입니다.");
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			closeConn();
+		}
+
+	}
+
+	// 이메일 수정 병합 완료
+	public void editUserEmail() {
+		System.out.println("변경할 이메일을 입력해주세요.");
+		String str1 = sc.nextLine();
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			PreparedStatement ps = conn.prepareStatement("update CustomerDTO set email= ? where id = ?");
+			ps.setString(1, str1);
+			ps.setString(2, id);
+			if (ps.executeUpdate() == 1) {
+				System.out.println("이메일 변경 완료");
+			} else {
+				System.out.println("입력 오류입니다.");
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			closeConn();
+		}
+	}
+
+	// 포인트 수정 병합 완료
+	public void editUserPoint() {
+		System.out.println("충전할 포인트를 입력해주세요.");
+		int value = getInt();
+		if (value < 0) {
+			System.out.println("음수 입력 불가입니다.");
+			return;
+		}
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			PreparedStatement ps = conn.prepareStatement("select point from customerdto where id = ?");
+			ps.setString(1, id);
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			int point = rs.getInt("point");
+			ps = conn.prepareStatement("update CustomerDTO set point= ? where id = ?");
+			ps.setInt(1, point + value);
+			ps.setString(2, id);
+			if (ps.executeUpdate() == 1) {
+				System.out.println("포인트 충전 완료");
+			} else {
+				System.out.println("입력 오류입니다.");
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			closeConn();
+		}
+	}
+
+	// 회원 탈퇴 신청 완료
+	public void editUserResign() {
+		System.out.println("회원 탈퇴 신청을 하시겠습니까?");
+		System.out.println("1.회원 탈퇴 아무키.취소");
+		String str1 = sc.nextLine();
+		if (str1.equals("1")) {
+			try {
+				conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+				PreparedStatement ps = conn.prepareStatement("update CustomerDTO set resign= 1 where id = ?");
+				ps.setString(1, id);
+				if (ps.executeUpdate() == 1) {
+					System.out.println("회원 탈퇴 신청 완료");
+				} else {
+					System.out.println("입력 오류입니다.");
+				}
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+			} finally {
+				closeConn();
+			}
+		}
+	}
+
 }
