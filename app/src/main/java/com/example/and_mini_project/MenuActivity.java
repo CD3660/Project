@@ -1,18 +1,12 @@
 package com.example.and_mini_project;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
+public class MenuActivity extends AppCompatActivity {
 
     final String TAG = "클릭";
     @Override
@@ -20,6 +14,14 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         MenuDAO dao = new MenuDAO();
         setContentView(R.layout.activity_menu);
+        dao.initList();
+        dao.eventSet(this);
+        Button purchase = findViewById(R.id.purchase);
+        purchase.setOnClickListener(v -> {
+            Intent intent = new Intent(this, PayActivity.class);
+            intent.putExtra("oList", dao.getOList());
+            startActivity(intent);
+        });
     }
 
 
