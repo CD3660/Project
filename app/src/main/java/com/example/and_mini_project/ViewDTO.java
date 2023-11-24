@@ -9,6 +9,17 @@ public class ViewDTO {
     TextView tv_stock, tv_total, tv_quantity, total_price;
     MenuVO vo;
 
+    public ViewDTO(Button btn_plus, Button btn_minus, TextView tv_stock, TextView tv_total, TextView tv_quantity, TextView total_price, MenuVO vo) {
+        this.btn_plus = btn_plus;
+        this.btn_minus = btn_minus;
+        this.tv_stock = tv_stock;
+        this.tv_total = tv_total;
+        this.tv_quantity = tv_quantity;
+        this.total_price = total_price;
+        this.vo = vo;
+        setEvent();
+    }
+
     public void setEvent(){
         btn_plus.setOnClickListener(v->{
             if (vo.getStock() == 0) {
