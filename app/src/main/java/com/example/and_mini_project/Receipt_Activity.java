@@ -7,7 +7,7 @@ import android.widget.ScrollView;
 
 public class Receipt_Activity extends AppCompatActivity {
 
-    ScrollView scrollView;
+
 
 
 
@@ -17,9 +17,9 @@ public class Receipt_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receipt);
 
+OrderlistVO vo 
 
 
-        scrollView = findViewById(R.id.scrollView);
 
 
     }
