@@ -18,7 +18,7 @@ public class MenuActivity extends AppCompatActivity {
         dao.eventSet(this);
         Button purchase = findViewById(R.id.purchase);
         purchase.setOnClickListener(v -> {
-            Intent intent = new Intent(this, PayActivity.class);
+            Intent intent = new Intent(MenuActivity.this, PayActivity.class);
             intent.putExtra("oList", dao.getOList());
             startActivity(intent);
         });

@@ -17,7 +17,6 @@ public class Receipt_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receipt);
 
-OrderlistVO vo 
 
 
 

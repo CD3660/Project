@@ -1,6 +1,8 @@
 package com.example.and_mini_project;
 
-public class OrderListVO {
+import java.io.Serializable;
+
+public class OrderListVO implements Serializable {
     private String name;
     private int price, quantity;
 

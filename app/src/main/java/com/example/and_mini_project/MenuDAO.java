@@ -161,6 +161,7 @@ public class MenuDAO {
                 activity.findViewById(R.id.total_price),
                 list.get(9)
         );
+        vList = new ArrayList<>();
         vList.add(dto1);
         vList.add(dto2);
         vList.add(dto3);
