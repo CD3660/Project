@@ -32,3 +32,4 @@ google-services.json
 # Android Profiling
 *.hprof
 .gradle/7.4/executionHistory/executionHistory.lock
+.gradle/7.4/fileHashes/fileHashes.lock
