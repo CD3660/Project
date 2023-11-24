@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 
 public class MenuDAO {
@@ -70,7 +72,7 @@ public class MenuDAO {
         return list;
     }
 
-    public void eventSet(MenuActivity activity) {
+    public void eventSet(@NonNull MenuActivity activity) {
         ViewDTO dto1 = new ViewDTO(
                 activity.findViewById(R.id.ramen_plus),
                 activity.findViewById(R.id.ramen_minus),
