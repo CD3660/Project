@@ -1,46 +1,33 @@
-# Compiled class file
-*.class
+# Gradle files
+.gradle/
+build/
 
-# Log file
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Log/OS Files
 *.log
 
-# BlueJ files
-*.ctxt
+# Android Studio generated files and folders
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+output.json
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# IntelliJ
+*.iml
+.idea/
+misc.xml
+deploymentTargetDropDown.xml
+render.experimental.xml
 
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
+# Keystore files
+*.jks
+*.keystore
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
-/bin/
-/target/
-*.xml
-.metadata/.lock
-.metadata/.plugins/org.eclipse.core.resources/.projects/.org.eclipse.egit.core.cmp/.location
-.metadata/.plugins/org.eclipse.core.resources/.root/.indexes/history.version
-*.index
-*.tree
-*.version
-*.resources
-*.prefs
-*.xmi
-.metadata/.plugins/org.eclipse.egit.core/.org.eclipse.egit.core.cmp/.project
-.metadata/.plugins/org.eclipse.jdt.core/assumedExternalFilesCache
-.metadata/.plugins/org.eclipse.jdt.core/externalFilesCache
-*.txt
-.metadata/.plugins/org.eclipse.jdt.core/nonChainingJarsCache
-*.dat
-*.ser
-*.setup
-.metadata/.plugins/org.eclipse.ui.intro/introstate
-*.ini
+# Google Services (e.g. APIs or Firebase)
+google-services.json
+
+# Android Profiling
+*.hprof
