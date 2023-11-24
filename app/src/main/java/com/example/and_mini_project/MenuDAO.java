@@ -1,5 +1,6 @@
 package com.example.and_mini_project;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 
 public class MenuDAO {
     ArrayList<MenuVO> list;
+    ArrayList<ViewDTO> vList;
 
     public ArrayList<MenuVO> initList() {
         list = new ArrayList<>();
@@ -159,69 +161,74 @@ public class MenuDAO {
                 activity.findViewById(R.id.total_price),
                 list.get(9)
         );
-
+        vList.add(dto1);
+        vList.add(dto2);
+        vList.add(dto3);
+        vList.add(dto4);
+        vList.add(dto5);
+        vList.add(dto6);
+        vList.add(dto7);
+        vList.add(dto8);
+        vList.add(dto9);
+        vList.add(dto10);
 
 
     }
 
-    public void parchase(){
+    public ArrayList<OrderListVO> getOList() {
+        ArrayList<OrderListVO> oList = new ArrayList<>();
+        OrderListVO vo1 = new OrderListVO();
+        vo1.setName(list.get(0).getName());
+        vo1.setPrice(list.get(0).getPrice());
+        vo1.setQuantity(Integer.parseInt(vList.get(0).tv_stock.getText().toString()));
+        OrderListVO vo2 = new OrderListVO();
+        vo2.setName(list.get(1).getName());
+        vo2.setPrice(list.get(1).getPrice());
+        vo2.setQuantity(Integer.parseInt(vList.get(1).tv_stock.getText().toString()));
+        OrderListVO vo3 = new OrderListVO();
+        vo3.setName(list.get(2).getName());
+        vo3.setPrice(list.get(2).getPrice());
+        vo3.setQuantity(Integer.parseInt(vList.get(2).tv_stock.getText().toString()));
+        OrderListVO vo4 = new OrderListVO();
+        vo4.setName(list.get(3).getName());
+        vo4.setPrice(list.get(3).getPrice());
+        vo4.setQuantity(Integer.parseInt(vList.get(3).tv_stock.getText().toString()));
+        OrderListVO vo5 = new OrderListVO();
+        vo5.setName(list.get(4).getName());
+        vo5.setPrice(list.get(4).getPrice());
+        vo5.setQuantity(Integer.parseInt(vList.get(4).tv_stock.getText().toString()));
+        OrderListVO vo6 = new OrderListVO();
+        vo6.setName(list.get(5).getName());
+        vo6.setPrice(list.get(5).getPrice());
+        vo6.setQuantity(Integer.parseInt(vList.get(5).tv_stock.getText().toString()));
+        OrderListVO vo7 = new OrderListVO();
+        vo7.setName(list.get(6).getName());
+        vo7.setPrice(list.get(6).getPrice());
+        vo7.setQuantity(Integer.parseInt(vList.get(6).tv_stock.getText().toString()));
+        OrderListVO vo8 = new OrderListVO();
+        vo8.setName(list.get(7).getName());
+        vo8.setPrice(list.get(7).getPrice());
+        vo8.setQuantity(Integer.parseInt(vList.get(7).tv_stock.getText().toString()));
+        OrderListVO vo9 = new OrderListVO();
+        vo9.setName(list.get(8).getName());
+        vo9.setPrice(list.get(8).getPrice());
+        vo9.setQuantity(Integer.parseInt(vList.get(8).tv_stock.getText().toString()));
+        OrderListVO vo10 = new OrderListVO();
+        vo10.setName(list.get(9).getName());
+        vo10.setPrice(list.get(9).getPrice());
+        vo10.setQuantity(Integer.parseInt(vList.get(9).tv_stock.getText().toString()));
+        oList.add(vo1);
+        oList.add(vo2);
+        oList.add(vo3);
+        oList.add(vo4);
+        oList.add(vo5);
+        oList.add(vo6);
+        oList.add(vo7);
+        oList.add(vo8);
+        oList.add(vo9);
+        oList.add(vo10);
 
-
-         if (v.getId() == R.id.purchase) {
-            Intent intent = new Intent(MenuActivity.this, PurchaseActivity.class);
-            ArrayList<OrderListVO> oList = new ArrayList<>();
-            OrderListVO vo1 = new OrderListVO();
-            vo1.setName(list.get(0).getName());
-            vo1.setPrice(list.get(0).getPrice());
-            vo1.setQuantity(Integer.parseInt(ramen_quantity.getText().toString()));
-            OrderListVO vo2 = new OrderListVO();
-            vo2.setName(list.get(1).getName());
-            vo2.setPrice(list.get(1).getPrice());
-            vo2.setQuantity(Integer.parseInt(kimbab_quantity.getText().toString()));
-            OrderListVO vo3 = new OrderListVO();
-            vo3.setName(list.get(2).getName());
-            vo3.setPrice(list.get(2).getPrice());
-            vo3.setQuantity(Integer.parseInt(mandoo_quantity.getText().toString()));
-            OrderListVO vo4 = new OrderListVO();
-            vo4.setName(list.get(3).getName());
-            vo4.setPrice(list.get(3).getPrice());
-            vo4.setQuantity(Integer.parseInt(frenchfry_quantity.getText().toString()));
-            OrderListVO vo5 = new OrderListVO();
-            vo5.setName(list.get(4).getName());
-            vo5.setPrice(list.get(4).getPrice());
-            vo5.setQuantity(Integer.parseInt(noodle_quantity.getText().toString()));
-            OrderListVO vo6 = new OrderListVO();
-            vo6.setName(list.get(5).getName());
-            vo6.setPrice(list.get(5).getPrice());
-            vo6.setQuantity(Integer.parseInt(sotteok_quantity.getText().toString()));
-            OrderListVO vo7 = new OrderListVO();
-            vo7.setName(list.get(6).getName());
-            vo7.setPrice(list.get(6).getPrice());
-            vo7.setQuantity(Integer.parseInt(sundae_quantity.getText().toString()));
-            OrderListVO vo8 = new OrderListVO();
-            vo8.setName(list.get(7).getName());
-            vo8.setPrice(list.get(7).getPrice());
-            vo8.setQuantity(Integer.parseInt(toast_quantity.getText().toString()));
-            OrderListVO vo9 = new OrderListVO();
-            vo9.setName(list.get(8).getName());
-            vo9.setPrice(list.get(8).getPrice());
-            vo9.setQuantity(Integer.parseInt(tteokbokki_quantity.getText().toString()));
-            OrderListVO vo10 = new OrderListVO();
-            vo10.setName(list.get(9).getName());
-            vo10.setPrice(list.get(9).getPrice());
-            vo10.setQuantity(Integer.parseInt(udon_quantity.getText().toString()));
-            oList.add(vo1);
-            oList.add(vo2);
-            oList.add(vo3);
-            oList.add(vo4);
-            oList.add(vo5);
-            oList.add(vo6);
-            oList.add(vo7);
-            oList.add(vo8);
-            oList.add(vo9);
-            oList.add(vo10);
-            intent.putExtra("oList", oList);
-            startActivity(intent);
+        return oList;
 
 
     }
