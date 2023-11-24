@@ -1,0 +1,129 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="MainActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="결제"
+            android:textSize="32dp"
+            android:textColor="#FFFFFFFF"
+            android:padding="8dp"
+            android:background="@color/main_color"
+            android:gravity="center"/>
+
+
+        <TextView
+            android:text="상품 1\ 가격\ 수량\ 총 가격"
+            android:textSize="25dp"
+            android:id="@+id/listview_list1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
+        <TextView
+            android:text="상품 2\ 가격\ 수량\ 총 가격 "
+            android:textSize="25dp"
+            android:id="@+id/listview_list2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
+        <TextView
+            android:text="상품 3\ 가격\ 수량\ 총 가격"
+            android:textSize="25dp"
+            android:id="@+id/listview_list3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
+        <TextView
+            android:text="상품 4\ 가격\ 수량\ 총 가격"
+            android:textSize="25dp"
+            android:id="@+id/listview_list4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
+        <TextView
+            android:text="상품 5\ 가격\ 수량\ 총 가격"
+            android:textSize="25dp"
+            android:id="@+id/listview_list5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
+        <TextView
+            android:text="상품 6\ 가격\ 수량\ 총 가격"
+            android:textSize="25dp"
+            android:id="@+id/listview_list6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
+        <TextView
+            android:text="상품 7\ 가격\ 수량\ 총 가격"
+            android:textSize="25dp"
+            android:id="@+id/listview_list7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
+        <TextView
+            android:text="상품 8\ 가격\ 수량\ 총 가격"
+            android:textSize="25dp"
+            android:id="@+id/listview_list8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
+        <TextView
+            android:text="상품 9\ 가격\ 수량\ 총 가격"
+            android:textSize="25dp"
+            android:id="@+id/listview_list9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
+        <TextView
+            android:text="상품 10\ 가격\ 수량\ 총 가격"
+            android:textSize="25dp"
+            android:id="@+id/listview_list10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/listview_list11"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="금액"
+            android:textSize="25dp" />
+
+        <Button
+            android:id="@+id/btn_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="충전" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+
+        android:gravity="center"
+        android:text="결제" />
+
+</LinearLayout>
