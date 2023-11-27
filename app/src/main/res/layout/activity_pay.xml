@@ -1,108 +1,144 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="MainActivity">
-    <LinearLayout
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical">
-        <TextView
+        >
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="결제"
-            android:textSize="32dp"
-            android:textColor="#FFFFFFFF"
-            android:padding="8dp"
-            android:background="@color/main_color"
-            android:gravity="center"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/main_color"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="결제"
+                android:textColor="#FFFFFFFF"
+                android:textSize="32dp" />
 
 
+            <TextView
+                android:id="@+id/listview_list1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="name + price + "
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/listview_list2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="상품 2\ 가격\ 수량\ 총 가격 "
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/listview_list3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="상품 3\ 가격\ 수량\ 총 가격"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/listview_list4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="상품 4\ 가격\ 수량\ 총 가격"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/listview_list5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="상품 5\ 가격\ 수량\ 총 가격"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/listview_list6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="상품 6\ 가격\ 수량\ 총 가격"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/listview_list7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="상품 7\ 가격\ 수량\ 총 가격"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/listview_list8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="상품 8\ 가격\ 수량\ 총 가격"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/listview_list9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="상품 9\ 가격\ 수량\ 총 가격"
+                android:textSize="25dp" />
+
+
+            <TextView
+                android:id="@+id/listview_list10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="상품 10\ 가격\ 수량\ 총 가격"
+                android:textSize="25dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
         <TextView
-            android:text="name + price + "
-            android:textSize="25dp"
-            android:id="@+id/listview_list1"
-            android:layout_width="match_parent"
+            android:id="@+id/total_price"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"/>
-        <TextView
-            android:text="상품 2\ 가격\ 수량\ 총 가격 "
-            android:textSize="25dp"
-            android:id="@+id/listview_list2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"/>
-        <TextView
-            android:text="상품 3\ 가격\ 수량\ 총 가격"
-            android:textSize="25dp"
-            android:id="@+id/listview_list3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"/>
-        <TextView
-            android:text="상품 4\ 가격\ 수량\ 총 가격"
-            android:textSize="25dp"
-            android:id="@+id/listview_list4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"/>
-        <TextView
-            android:text="상품 5\ 가격\ 수량\ 총 가격"
-            android:textSize="25dp"
-            android:id="@+id/listview_list5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"/>
-        <TextView
-            android:text="상품 6\ 가격\ 수량\ 총 가격"
-            android:textSize="25dp"
-            android:id="@+id/listview_list6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"/>
-        <TextView
-            android:text="상품 7\ 가격\ 수량\ 총 가격"
-            android:textSize="25dp"
-            android:id="@+id/listview_list7"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"/>
-        <TextView
-            android:text="상품 8\ 가격\ 수량\ 총 가격"
-            android:textSize="25dp"
-            android:id="@+id/listview_list8"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"/>
-        <TextView
-            android:text="상품 9\ 가격\ 수량\ 총 가격"
-            android:textSize="25dp"
-            android:id="@+id/listview_list9"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"/>
-        <TextView
-            android:text="상품 10\ 가격\ 수량\ 총 가격"
-            android:textSize="25dp"
-            android:id="@+id/listview_list10"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"/>
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="총금액"
+            android:textSize="25dp">
+
+        </TextView>
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+
         <TextView
             android:id="@+id/listview_list11"
-            android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="금액"
             android:textSize="25dp" />
