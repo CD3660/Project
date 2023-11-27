@@ -7,7 +7,7 @@ public class ReceiptVO {
     private LinearLayout layout;
     private TextView name, price, quantity, total;
 
-    
+
 
     public LinearLayout getLayout() {
         return layout;
