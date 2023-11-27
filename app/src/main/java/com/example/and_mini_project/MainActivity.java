@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(MainActivity.this, Receipt_Activity.class);
+        Intent intent = new Intent(MainActivity.this, MenuActivity.class);
         new Handler().postDelayed(new Runnable()
         {
             @Override
