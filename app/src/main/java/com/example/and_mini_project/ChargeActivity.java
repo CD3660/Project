@@ -25,10 +25,11 @@ public class ChargeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String str =editText.getText().toString();
                 try {
-                    int charge = Integer.parseInt(str);//강제 타입 변환 String에서 int로
-                    Intent intent = new Intent(ChargeActivity.this, MainActivity.class);//화면을 바꿈
-                    intent.putExtra("charge", charge);//데이터 intent 장소로 가지고 감
-                    startActivity(intent);
+                    //int charge = Integer.parseInt(str);//강제 타입 변환 String에서 int로
+                    //Intent intent = new Intent(ChargeActivity.this, PayActivity.class);//화면을 바꿈
+                   // intent.putExtra("charge", charge);//데이터 intent 장소로 가지고 감
+                   // startActivity(intent);
+                    PayActivity.money += Integer.parseInt(str) ;
                     finish();
                 }catch (Exception e){
                     e.printStackTrace();

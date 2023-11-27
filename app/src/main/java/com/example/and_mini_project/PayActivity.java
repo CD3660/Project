@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -11,7 +12,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class PayActivity extends AppCompatActivity {
-
+    public static int money = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,15 +24,15 @@ public class PayActivity extends AppCompatActivity {
 
 
         TextView chargeview = findViewById(R.id.listview_list11);
-        int charge = intent.getIntExtra("charge", 0);
-        chargeview.setText(charge);
+        int charge = getIntent().getIntExtra("charge", 0);
+        chargeview.setText(charge+"");
 
         Button pay = findViewById(R.id.btn_2);
         pay.setOnClickListener(view -> {
-            if(charge>dao.total()){
+            if(money>dao.total()){
                 Intent intenta = new Intent(this, Receipt_Activity.class);
                 intenta.putExtra("oList", oList);
-                intenta.putExtra("charge", charge);
+                intenta.putExtra("charge", money);
                 startActivity(intenta);
                 finish();
             } else {
@@ -43,9 +44,20 @@ public class PayActivity extends AppCompatActivity {
         chargebtn.setOnClickListener(view -> {
             Intent intenta = new Intent(this, ChargeActivity.class);
             startActivity(intenta);
+
         });
 
 
     }
 
+
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        TextView chargeview = findViewById(R.id.listview_list11);
+      //  int charge = getIntent().getIntExtra("charge", 0);
+        chargeview.setText(money+"");
+    }
 }

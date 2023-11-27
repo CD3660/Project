@@ -1,6 +1,7 @@
 package com.example.and_mini_project;
 
 import android.app.Activity;
+import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
