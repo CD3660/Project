@@ -26,6 +26,8 @@ public class PayActivity extends AppCompatActivity {
         int charge = intent.getIntExtra("charge", 0);
         chargeview.setText(charge);
 
+        TextView total_price = findViewById(R.id.total_price);
+        total_price.setText(dao.total()+"");
         Button pay = findViewById(R.id.btn_2);
         pay.setOnClickListener(view -> {
             if(charge>dao.total()){
