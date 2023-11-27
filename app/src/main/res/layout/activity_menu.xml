@@ -184,7 +184,7 @@
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="10dp"
                     android:layout_toRightOf="@+id/kimbab_img"
-                    android:text="2300"
+                    android:text="2500"
                     android:textSize="20dp" />
 
                 <TextView
