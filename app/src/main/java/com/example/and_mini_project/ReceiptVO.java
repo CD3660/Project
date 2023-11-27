@@ -7,6 +7,16 @@ public class ReceiptVO {
     private LinearLayout layout;
     private TextView name, price, quantity, total;
 
+
+
+    public TextView getCharge() {
+        return charge;
+    }
+
+    public void setCharge(TextView charge) {
+        this.charge = charge;
+    }
+
     public LinearLayout getLayout() {
         return layout;
     }
