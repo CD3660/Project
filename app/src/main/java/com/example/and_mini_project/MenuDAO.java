@@ -1,17 +1,10 @@
 package com.example.and_mini_project;
 
-<<<<<<< Updated upstream
-import android.app.Activity;
-import android.content.Intent;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+
+
 
 import androidx.annotation.NonNull;
 
-=======
->>>>>>> Stashed changes
 import java.util.ArrayList;
 
 public class MenuDAO {

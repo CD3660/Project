@@ -23,6 +23,6 @@ public class Receipt_Activity extends AppCompatActivity {
         ReceiptDAO dao = new ReceiptDAO();
 
         dao.initViewList(this);
-        dao.display(dao.initList());
+        dao.display((ArrayList<OrderListVO>) getIntent().getSerializableExtra("oList"));
     }
 }
