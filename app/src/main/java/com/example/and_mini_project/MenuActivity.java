@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class MenuActivity extends AppCompatActivity {
     ArrayList<MenuVO> list;
-    final String TAG = "클릭";
+    //final String TAG = "클릭";
     MenuDAO dao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ public class MenuActivity extends AppCompatActivity {
             Intent intent = new Intent(MenuActivity.this, PayActivity.class);
             intent.putExtra("oList", dao.getOList());
             startActivity(intent);
-
+            //Log.d(TAG, "onCreate: ");
         });
     }
 }

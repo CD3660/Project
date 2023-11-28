@@ -1089,6 +1089,7 @@
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"/>
+
             <TextView
                 android:id="@+id/total_price"
                 android:layout_width="wrap_content"
