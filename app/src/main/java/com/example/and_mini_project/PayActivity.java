@@ -31,7 +31,7 @@ public class PayActivity extends AppCompatActivity {
         total_price.setText(dao.total()+"");
         Button pay = findViewById(R.id.btn_2);
         pay.setOnClickListener(view -> {
-            if(money>dao.total()){
+            if(money>=dao.total()){
                 Intent intenta = new Intent(this, Receipt_Activity.class);
                 intenta.putExtra("oList", oList);
                 intenta.putExtra("charge", money);
