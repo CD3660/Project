@@ -23,17 +23,9 @@ public class MenuActivity extends AppCompatActivity {
         Button pay = findViewById(R.id.pay);
         pay.setOnClickListener(v -> {
             Intent intent = new Intent(MenuActivity.this, PayActivity.class);
-            list = dao.updateList(list);
-            dao.display(list);
             intent.putExtra("oList", dao.getOList());
             startActivity(intent);
 
         });
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        dao.display(list);
     }
 }

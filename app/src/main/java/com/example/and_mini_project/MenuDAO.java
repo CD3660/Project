@@ -231,24 +231,4 @@ public class MenuDAO {
 
 
     }
-
-    public ArrayList<MenuVO> updateList(ArrayList<MenuVO> list){
-        list.get(0).setStock(Integer.parseInt(vList.get(0).tv_stock.getText().toString()));
-        list.get(1).setStock(Integer.parseInt(vList.get(1).tv_stock.getText().toString()));
-        list.get(2).setStock(Integer.parseInt(vList.get(2).tv_stock.getText().toString()));
-        list.get(3).setStock(Integer.parseInt(vList.get(3).tv_stock.getText().toString()));
-        list.get(4).setStock(Integer.parseInt(vList.get(4).tv_stock.getText().toString()));
-        list.get(5).setStock(Integer.parseInt(vList.get(5).tv_stock.getText().toString()));
-        list.get(6).setStock(Integer.parseInt(vList.get(6).tv_stock.getText().toString()));
-        list.get(7).setStock(Integer.parseInt(vList.get(7).tv_stock.getText().toString()));
-        list.get(8).setStock(Integer.parseInt(vList.get(8).tv_stock.getText().toString()));
-        list.get(9).setStock(Integer.parseInt(vList.get(9).tv_stock.getText().toString()));
-        return list;
-    }
-
-    public void display(ArrayList<MenuVO> list){
-        for(int i =0; i<10; i++) {
-            vList.get(i).tv_stock.setText(list.get(i).getStock() + "");
-        }
-    }
 }
