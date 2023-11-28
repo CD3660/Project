@@ -41,6 +41,7 @@ public class PayDAO {
                     oList.get(i).getPrice() + " " +
                     oList.get(i).getQuantity() + " "
                     + (oList.get(i).getPrice() * oList.get(i).getQuantity()));
+
         }
     }
 

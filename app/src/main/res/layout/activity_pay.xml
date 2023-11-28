@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="name + price + "
+                android:text="이름   가격   수량    총가격"
                 android:textSize="25dp" />
 
             <TextView
@@ -48,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="상품 3\ 가격\ 수량\ 총 가격"
+                android:text="상3\ 가격\ 수량\ 총 가격"
                 android:textSize="25dp" />
 
             <TextView
